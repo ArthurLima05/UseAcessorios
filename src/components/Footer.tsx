@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={16} className="text-[#f8dbe0]" />
-                <span className="text-gray-400">contato@useacessorios.com</span>
+                <span className="text-gray-400">contato@.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin size={16} className="text-[#f8dbe0]" />
