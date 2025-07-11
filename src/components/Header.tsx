@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount }) =
               <img 
                 src="/logoUseAcessorios.png" 
                 alt="Use Acessórios" 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
           </div>
