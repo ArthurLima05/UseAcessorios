@@ -8,9 +8,9 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount }) => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-100">
+    <header className="bg-white shadow-sm border-b border-gray-100 pt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20 pb-4">
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
               <img 
