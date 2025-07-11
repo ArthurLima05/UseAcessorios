@@ -11,9 +11,8 @@ export const Footer: React.FC = () => {
               <img 
                 src="/logoUseAcessorios.png" 
                 alt="Use Acessórios" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
-              <h3 className="text-2xl font-bold text-[#f8dbe0]">Use Acessórios</h3>
             </div>
             <p className="text-gray-400 mb-4">
               Criamos acessórios únicos que celebram seus momentos mais especiais com elegância e sofisticação.
