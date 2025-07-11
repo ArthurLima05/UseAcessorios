@@ -7,9 +7,16 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-2xl font-bold text-[#f8dbe0] mb-4">Lumina Joias</h3>
+            <div className="flex items-center space-x-3 mb-4">
+              <img 
+                src="/logoUseAcessorios.png" 
+                alt="Use Acessórios" 
+                className="h-8 w-auto"
+              />
+              <h3 className="text-2xl font-bold text-[#f8dbe0]">Use Acessórios</h3>
+            </div>
             <p className="text-gray-400 mb-4">
-              Criamos joias únicas que celebram seus momentos mais especiais com elegância e sofisticação.
+              Criamos acessórios únicos que celebram seus momentos mais especiais com elegância e sofisticação.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-[#f8dbe0] transition-colors">
@@ -53,7 +60,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={16} className="text-[#f8dbe0]" />
-                <span className="text-gray-400">contato@luminajoias.com</span>
+                <span className="text-gray-400">contato@useacessorios.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin size={16} className="text-[#f8dbe0]" />
@@ -65,7 +72,7 @@ export const Footer: React.FC = () => {
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
-            © 2024 Lumina Joias. Todos os direitos reservados.
+            © 2024 Use Acessórios. Todos os direitos reservados.
           </p>
         </div>
       </div>

@@ -6,14 +6,14 @@ export const useCart = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('jewelry-cart');
+    const savedCart = localStorage.getItem('use-acessorios-cart');
     if (savedCart) {
       setItems(JSON.parse(savedCart));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('jewelry-cart', JSON.stringify(items));
+    localStorage.setItem('use-acessorios-cart', JSON.stringify(items));
   }, [items]);
 
   const addItem = (product: Product) => {

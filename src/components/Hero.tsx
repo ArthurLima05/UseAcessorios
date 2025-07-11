@@ -12,11 +12,11 @@ export const Hero: React.FC = () => {
               <span className="text-[#970048] font-medium">Coleção Exclusiva</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Joias que Contam
+              Acessórios que Contam
               <span className="text-[#970048]"> Sua História</span>
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Descubra nossa coleção exclusiva de joias artesanais, criadas com os mais finos materiais 
+              Descubra nossa coleção exclusiva de acessórios artesanais, criados com os mais finos materiais 
               e técnicas tradicionais para celebrar seus momentos especiais.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -39,7 +39,7 @@ export const Hero: React.FC = () => {
             </div>
             <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
               <div className="text-2xl font-bold text-[#970048]">50+</div>
-              <div className="text-sm text-gray-600">Peças Únicas</div>
+              <div className="text-sm text-gray-600">Acessórios Únicos</div>
             </div>
           </div>
         </div>

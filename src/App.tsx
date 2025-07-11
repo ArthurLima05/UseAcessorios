@@ -72,7 +72,7 @@ function App() {
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Nossa Coleção</h2>
           <p className="text-gray-600">
-            Explore nossa seleção cuidadosamente curada de joias exclusivas
+            Explore nossa seleção cuidadosamente curada de acessórios exclusivos
           </p>
         </div>
         
