@@ -7,6 +7,7 @@ import { CategoryFilter } from './components/CategoryFilter';
 import { ProductGrid } from './components/ProductGrid';
 import { ProductDetail } from './components/ProductDetail';
 import { Cart } from './components/Cart';
+import { Checkout } from './components/Checkout';
 import { Footer } from './components/Footer';
 import { GuidesSection } from './components/GuidesSection';
 import { products } from './data/products';
@@ -18,6 +19,7 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showGuides, setShowGuides] = useState(false);
   const [showCategoryProducts, setShowCategoryProducts] = useState<string | null>(null);
+  const [showCheckout, setShowCheckout] = useState(false);
   const cart = useCart();
 
   const filteredProducts = selectedCategory === 'all' 
@@ -45,18 +47,52 @@ function App() {
     setSelectedProduct(null);
     setShowGuides(false);
     setShowCategoryProducts(null);
+    setShowCheckout(false);
   };
 
   const handleShowGuides = () => {
     setShowGuides(true);
     setSelectedProduct(null);
     setShowCategoryProducts(null);
+    setShowCheckout(false);
   };
 
   const handlePurchaseGuide = (guide: Guide) => {
     // Implementar lógica de compra do guia
     alert(`Redirecionando para pagamento do guia: ${guide.name}`);
   };
+
+  const handleCheckout = () => {
+    setShowCheckout(true);
+    cart.setIsOpen(false);
+  };
+
+  const handleOrderComplete = () => {
+    cart.clearCart();
+    setShowCheckout(false);
+  };
+
+  // Mostrar checkout
+  if (showCheckout) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header 
+          onCartClick={() => cart.setIsOpen(true)}
+          cartItemsCount={cart.getItemsCount()}
+          onGuidesClick={handleShowGuides}
+        />
+        
+        <Checkout 
+          items={cart.items}
+          total={cart.getTotal()}
+          onBack={() => setShowCheckout(false)}
+          onOrderComplete={handleOrderComplete}
+        />
+        
+        <Footer />
+      </div>
+    );
+  }
 
   // Mostrar produtos de uma categoria específica
   if (showCategoryProducts) {

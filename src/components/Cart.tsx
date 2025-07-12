@@ -9,6 +9,7 @@ interface CartProps {
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveItem: (productId: number) => void;
   total: number;
+  onCheckout: () => void;
 }
 
 export const Cart: React.FC<CartProps> = ({ 
@@ -17,7 +18,8 @@ export const Cart: React.FC<CartProps> = ({
   items, 
   onUpdateQuantity, 
   onRemoveItem,
-  total 
+  total,
+  onCheckout
 }) => {
   if (!isOpen) return null;
 
@@ -90,7 +92,10 @@ export const Cart: React.FC<CartProps> = ({
                   R$ {total.toLocaleString('pt-BR')}
                 </span>
               </div>
-              <button className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors">
+              <button 
+                onClick={onCheckout}
+                className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
+              >
                 Finalizar Compra
               </button>
             </div>

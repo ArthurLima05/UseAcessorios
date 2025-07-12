@@ -26,9 +26,6 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onG
             <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Início
             </a>
-            <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
-              Coleções
-            </a>
             <button 
               onClick={onGuidesClick}
               className="text-gray-700 hover:text-[#970048] transition-colors font-medium"
@@ -47,11 +44,8 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onG
             <button className="text-gray-700 hover:text-[#970048] transition-colors">
               <Search size={20} />
             </button>
-            <button className="text-gray-700 hover:text-[#970048] transition-colors">
+            <button className="text-gray-700 hover:text-[#970048] transition-colors group">
               <Heart size={20} />
-            </button>
-            <button className="text-gray-700 hover:text-[#970048] transition-colors">
-              <User size={20} />
             </button>
             <button 
               onClick={onCartClick}
