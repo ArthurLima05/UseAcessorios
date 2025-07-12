@@ -4,9 +4,10 @@ import { Search, ShoppingBag, Heart, User } from 'lucide-react';
 interface HeaderProps {
   onCartClick: () => void;
   cartItemsCount: number;
+  onGuidesClick?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount }) => {
+export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onGuidesClick }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 pt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,6 +29,12 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount }) =
             <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Coleções
             </a>
+            <button 
+              onClick={onGuidesClick}
+              className="text-gray-700 hover:text-[#970048] transition-colors font-medium"
+            >
+              Guias de Tendência
+            </button>
             <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Sobre
             </a>

@@ -21,3 +21,14 @@ export interface Category {
   name: string;
   count: number;
 }
+
+export interface Guide {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  description: string;
+  category: string;
+  downloadUrl?: string;
+}

@@ -6,13 +6,15 @@ import { ProductGrid } from './components/ProductGrid';
 import { ProductDetail } from './components/ProductDetail';
 import { Cart } from './components/Cart';
 import { Footer } from './components/Footer';
+import { GuidesSection } from './components/GuidesSection';
 import { products } from './data/products';
 import { useCart } from './hooks/useCart';
-import { Product } from './types';
+import { Product, Guide } from './types';
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showGuides, setShowGuides] = useState(false);
   const cart = useCart();
 
   const filteredProducts = selectedCategory === 'all' 
@@ -29,7 +31,43 @@ function App() {
 
   const handleBackToProducts = () => {
     setSelectedProduct(null);
+    setShowGuides(false);
   };
+
+  const handleShowGuides = () => {
+    setShowGuides(true);
+    setSelectedProduct(null);
+  };
+
+  const handlePurchaseGuide = (guide: Guide) => {
+    // Implementar lógica de compra do guia
+    alert(`Redirecionando para pagamento do guia: ${guide.name}`);
+  };
+
+  if (showGuides) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header 
+          onCartClick={() => cart.setIsOpen(true)}
+          cartItemsCount={cart.getItemsCount()}
+          onGuidesClick={() => setShowGuides(false)}
+        />
+        
+        <GuidesSection onPurchaseGuide={handlePurchaseGuide} />
+        
+        <Cart 
+          isOpen={cart.isOpen}
+          onClose={() => cart.setIsOpen(false)}
+          items={cart.items}
+          onUpdateQuantity={cart.updateQuantity}
+          onRemoveItem={cart.removeItem}
+          total={cart.getTotal()}
+        />
+        
+        <Footer />
+      </div>
+    );
+  }
 
   if (selectedProduct) {
     return (
@@ -37,6 +75,7 @@ function App() {
         <Header 
           onCartClick={() => cart.setIsOpen(true)}
           cartItemsCount={cart.getItemsCount()}
+          onGuidesClick={handleShowGuides}
         />
         
         <ProductDetail 
@@ -64,6 +103,7 @@ function App() {
       <Header 
         onCartClick={() => cart.setIsOpen(true)}
         cartItemsCount={cart.getItemsCount()}
+        onGuidesClick={handleShowGuides}
       />
       
       <Hero />
