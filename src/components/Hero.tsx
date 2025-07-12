@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="bg-gradient-to-r from-[#f8dbe0] to-white py-16 lg:py-24">
+    <section className="bg-gradient-to-b from-white to-[#f8dbe0] py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
