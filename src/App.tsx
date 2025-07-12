@@ -134,7 +134,6 @@ function App() {
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
-          onCheckout={handleCheckout}
         />
         
         <Footer />
@@ -159,7 +158,6 @@ function App() {
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
-          onCheckout={handleCheckout}
         />
         
         <Footer />
@@ -189,7 +187,6 @@ function App() {
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
-          onCheckout={handleCheckout}
         />
         
         <Footer />
