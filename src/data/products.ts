@@ -315,7 +315,7 @@ export const products: Product[] = [
   }
 ];
 
-export const categories = [
+const categories = [
   { id: 'all', name: 'Todos', count: products.length },
   { id: 'brincos', name: 'Brincos', count: products.filter(p => p.category === 'brincos').length },
   { id: 'colares', name: 'Colares', count: products.filter(p => p.category === 'colares').length },

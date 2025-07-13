@@ -16,7 +16,7 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface Category {
+interface Category {
   id: string;
   name: string;
   count: number;
