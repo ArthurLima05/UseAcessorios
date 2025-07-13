@@ -3,7 +3,6 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { JewelryCategories } from './components/JewelryCategories';
 import { CategoryShowcase } from './components/CategoryShowcase';
-import { CategoryFilter } from './components/CategoryFilter';
 import { ProductGrid } from './components/ProductGrid';
 import { ProductDetail } from './components/ProductDetail';
 import { Cart } from './components/Cart';
@@ -22,13 +21,13 @@ function App() {
   const [showCheckout, setShowCheckout] = useState(false);
   const cart = useCart();
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
+  const filteredProducts = selectedCategory === 'all'
+    ? products
     : products.filter(product => product.category === selectedCategory);
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-  };
+  // const handleCategoryChange = (category: string) => {
+  //  setSelectedCategory(category);
+  // };
 
   const handleCategorySelect = (categoryId: string) => {
     setShowCategoryProducts(categoryId);
@@ -76,19 +75,19 @@ function App() {
   if (showCheckout) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header 
+        <Header
           onCartClick={() => cart.setIsOpen(true)}
           cartItemsCount={cart.getItemsCount()}
           onGuidesClick={handleShowGuides}
         />
-        
-        <Checkout 
+
+        <Checkout
           items={cart.items}
           total={cart.getTotal()}
           onBack={() => setShowCheckout(false)}
           onOrderComplete={handleOrderComplete}
         />
-        
+
         <Footer />
       </div>
     );
@@ -98,12 +97,12 @@ function App() {
   if (showCategoryProducts) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header 
+        <Header
           onCartClick={() => cart.setIsOpen(true)}
           cartItemsCount={cart.getItemsCount()}
           onGuidesClick={handleShowGuides}
         />
-        
+
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-8">
             <button
@@ -119,23 +118,24 @@ function App() {
               Explore nossa coleção completa de {showCategoryProducts === 'chocker' ? 'chokers' : showCategoryProducts}
             </p>
           </div>
-          
-          <ProductGrid 
+
+          <ProductGrid
             products={filteredProducts}
             onAddToCart={cart.addItem}
             onViewProduct={handleViewProduct}
           />
         </main>
-        
-        <Cart 
+
+        <Cart
           isOpen={cart.isOpen}
           onClose={() => cart.setIsOpen(false)}
           items={cart.items}
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
+          onCheckout={handleCheckout}
         />
-        
+
         <Footer />
       </div>
     );
@@ -143,23 +143,24 @@ function App() {
   if (showGuides) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header 
+        <Header
           onCartClick={() => cart.setIsOpen(true)}
           cartItemsCount={cart.getItemsCount()}
           onGuidesClick={() => setShowGuides(false)}
         />
-        
+
         <GuidesSection onPurchaseGuide={handlePurchaseGuide} />
-        
-        <Cart 
+
+        <Cart
           isOpen={cart.isOpen}
           onClose={() => cart.setIsOpen(false)}
           items={cart.items}
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
+          onCheckout={handleCheckout}
         />
-        
+
         <Footer />
       </div>
     );
@@ -168,27 +169,29 @@ function App() {
   if (selectedProduct) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header 
+        <Header
           onCartClick={() => cart.setIsOpen(true)}
           cartItemsCount={cart.getItemsCount()}
           onGuidesClick={handleShowGuides}
         />
-        
-        <ProductDetail 
+
+        <ProductDetail
           product={selectedProduct}
           onBack={handleBackToProducts}
           onAddToCart={cart.addItem}
+          onCheckout={handleCheckout}
         />
-        
-        <Cart 
+
+        <Cart
           isOpen={cart.isOpen}
           onClose={() => cart.setIsOpen(false)}
           items={cart.items}
           onUpdateQuantity={cart.updateQuantity}
           onRemoveItem={cart.removeItem}
           total={cart.getTotal()}
+          onCheckout={handleCheckout}
         />
-        
+
         <Footer />
       </div>
     );
@@ -196,16 +199,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
+      <Header
         onCartClick={() => cart.setIsOpen(true)}
         cartItemsCount={cart.getItemsCount()}
         onGuidesClick={handleShowGuides}
       />
-      
+
       <Hero />
-      
+
       <JewelryCategories onCategorySelect={handleCategorySelect} />
-      
+
       {/* Showcases por categoria */}
       <div className="bg-gray-50">
         <CategoryShowcase
@@ -216,7 +219,7 @@ function App() {
           onViewProduct={handleViewProduct}
           onViewAll={handleViewAllCategory}
         />
-        
+
         <CategoryShowcase
           categoryId="colares"
           categoryName="Colares"
@@ -225,7 +228,7 @@ function App() {
           onViewProduct={handleViewProduct}
           onViewAll={handleViewAllCategory}
         />
-        
+
         <CategoryShowcase
           categoryId="pulseiras"
           categoryName="Pulseiras"
@@ -234,7 +237,7 @@ function App() {
           onViewProduct={handleViewProduct}
           onViewAll={handleViewAllCategory}
         />
-        
+
         <CategoryShowcase
           categoryId="piercing"
           categoryName="Piercing"
@@ -243,7 +246,7 @@ function App() {
           onViewProduct={handleViewProduct}
           onViewAll={handleViewAllCategory}
         />
-        
+
         <CategoryShowcase
           categoryId="chocker"
           categoryName="Chokers"
@@ -253,8 +256,8 @@ function App() {
           onViewAll={handleViewAllCategory}
         />
       </div>
-      
-      <Cart 
+
+      <Cart
         isOpen={cart.isOpen}
         onClose={() => cart.setIsOpen(false)}
         items={cart.items}
@@ -263,7 +266,7 @@ function App() {
         total={cart.getTotal()}
         onCheckout={handleCheckout}
       />
-      
+
       <Footer />
     </div>
   );

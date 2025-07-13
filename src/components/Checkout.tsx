@@ -54,7 +54,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Pedido Confirmado!</h2>
               <p className="text-gray-600">Seu pedido foi processado com sucesso</p>
             </div>
-            
+
             <div className="bg-gray-50 rounded-lg p-6 mb-6">
               <h3 className="font-semibold text-gray-900 mb-4">Resumo do Pedido</h3>
               <div className="space-y-2 text-sm">
@@ -90,7 +90,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
               </div>
             )}
 
-            <button 
+            <button
               onClick={onBack}
               className="bg-[#970048] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
             >
@@ -105,7 +105,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <button 
+        <button
           onClick={onBack}
           className="flex items-center space-x-2 text-[#970048] hover:text-[#7a0039] transition-colors mb-8"
         >
@@ -124,15 +124,14 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
             {step === 'payment' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Forma de Pagamento</h2>
-                
+
                 <div className="space-y-4">
-                  <div 
+                  <div
                     onClick={() => setPaymentMethod('pix')}
-                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                      paymentMethod === 'pix' 
-                        ? 'border-[#970048] bg-[#f8dbe0]' 
+                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${paymentMethod === 'pix'
+                        ? 'border-[#970048] bg-[#f8dbe0]'
                         : 'border-gray-200 hover:border-[#f8dbe0]'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center space-x-3">
                       <Smartphone className="text-[#970048]" size={24} />
@@ -143,13 +142,12 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                     </div>
                   </div>
 
-                  <div 
+                  <div
                     onClick={() => setPaymentMethod('card')}
-                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                      paymentMethod === 'card' 
-                        ? 'border-[#970048] bg-[#f8dbe0]' 
+                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${paymentMethod === 'card'
+                        ? 'border-[#970048] bg-[#f8dbe0]'
                         : 'border-gray-200 hover:border-[#f8dbe0]'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center space-x-3">
                       <CreditCard className="text-[#970048]" size={24} />
@@ -161,7 +159,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                   </div>
                 </div>
 
-                <button 
+                <button
                   onClick={handleNextStep}
                   className="w-full mt-6 bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
                 >
@@ -174,7 +172,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
               <div className="space-y-6">
                 <div className="bg-white rounded-xl shadow-sm p-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados Pessoais</h2>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -225,7 +223,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                       />
                     </div>
                   </div>
-                  
+
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Endereço Completo
@@ -238,7 +236,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                       placeholder="Rua, número, complemento"
                     />
                   </div>
-                  
+
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Cidade
@@ -256,7 +254,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                 {paymentMethod === 'card' && (
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados do Cartão</h2>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -310,7 +308,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                   </div>
                 )}
 
-                <button 
+                <button
                   onClick={handleNextStep}
                   className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
                 >
@@ -324,12 +322,12 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
           <div className="lg:sticky lg:top-8">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Resumo do Pedido</h2>
-              
+
               <div className="space-y-4 mb-6">
                 {items.map(item => (
                   <div key={item.product.id} className="flex items-center space-x-4">
-                    <img 
-                      src={item.product.image} 
+                    <img
+                      src={item.product.image}
                       alt={item.product.name}
                       className="w-16 h-16 object-cover rounded-lg"
                     />
@@ -362,7 +360,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
               </div>
 
               {step === 'details' && (
-                <button 
+                <button
                   onClick={handleConfirmOrder}
                   className="w-full mt-6 bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
                 >

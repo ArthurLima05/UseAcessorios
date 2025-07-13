@@ -6,12 +6,14 @@ interface ProductDetailProps {
   product: Product;
   onBack: () => void;
   onAddToCart: (product: Product) => void;
+  onCheckout: () => void;
 }
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ 
-  product, 
-  onBack, 
-  onAddToCart 
+export const ProductDetail: React.FC<ProductDetailProps> = ({
+  product,
+  onBack,
+  onAddToCart,
+  onCheckout
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -25,7 +27,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <button 
+        <button
           onClick={onBack}
           className="flex items-center space-x-2 text-[#970048] hover:text-[#7a0039] transition-colors mb-8"
         >
@@ -37,8 +39,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           {/* Galeria de Imagens */}
           <div className="space-y-4">
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-sm">
-              <img 
-                src={product.images[selectedImageIndex]} 
+              <img
+                src={product.images[selectedImageIndex]}
                 alt={product.name}
                 className="w-full h-96 lg:h-[500px] object-cover"
               />
@@ -51,20 +53,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Heart size={20} className="text-[#970048]" />
               </button>
             </div>
-            
+
             <div className="flex space-x-3 overflow-x-auto">
               {product.images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                    selectedImageIndex === index 
-                      ? 'border-[#970048]' 
-                      : 'border-gray-200 hover:border-[#f8dbe0]'
-                  }`}
+                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${selectedImageIndex === index
+                    ? 'border-[#970048]'
+                    : 'border-gray-200 hover:border-[#f8dbe0]'
+                    }`}
                 >
-                  <img 
-                    src={image} 
+                  <img
+                    src={image}
                     alt={`${product.name} ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
@@ -130,14 +131,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <div className="flex items-center space-x-4 mb-6">
                 <label className="text-sm font-medium text-gray-700">Quantidade:</label>
                 <div className="flex items-center border border-gray-300 rounded-lg">
-                  <button 
+                  <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="px-3 py-2 hover:bg-gray-100 transition-colors"
                   >
                     -
                   </button>
                   <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
-                  <button 
+                  <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="px-3 py-2 hover:bg-gray-100 transition-colors"
                   >
@@ -147,13 +148,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               </div>
 
               <div className="space-y-3">
-                <button 
+                <button
                   onClick={handleAddToCart}
                   className="w-full bg-[#970048] text-white py-4 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
                 >
                   Adicionar ao Carrinho
                 </button>
-                <button className="w-full border border-[#970048] text-[#970048] py-4 rounded-lg font-medium hover:bg-[#970048] hover:text-white transition-colors">
+                <button
+                  onClick={onCheckout}
+                  className="w-full border border-[#970048] text-[#970048] py-4 rounded-lg font-medium hover:bg-[#970048] hover:text-white transition-colors">
                   Comprar Agora
                 </button>
               </div>

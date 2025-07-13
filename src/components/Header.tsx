@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingBag, Heart, User } from 'lucide-react';
+import { Search, ShoppingBag, Heart } from 'lucide-react';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -14,19 +14,19 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onG
         <div className="flex items-center justify-between h-20 pb-4">
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/logoUseAcessorios.png" 
-                alt="Use Acessórios" 
+              <img
+                src="/logoUseAcessorios.png"
+                alt="Use Acessórios"
                 className="h-20 w-auto"
               />
             </div>
           </div>
-          
+
           <nav className="hidden md:flex space-x-8">
             <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Início
             </a>
-            <button 
+            <button
               onClick={onGuidesClick}
               className="text-gray-700 hover:text-[#970048] transition-colors font-medium"
             >
@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onG
               Contato
             </a>
           </nav>
-          
+
           <div className="flex items-center space-x-4">
             <button className="text-gray-700 hover:text-[#970048] transition-colors">
               <Search size={20} />
@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemsCount, onG
             <button className="text-gray-700 hover:text-[#970048] transition-colors group">
               <Heart size={20} />
             </button>
-            <button 
+            <button
               onClick={onCartClick}
               className="relative text-gray-700 hover:text-[#970048] transition-colors"
             >

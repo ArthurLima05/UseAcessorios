@@ -12,8 +12,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-lg transition-shadow duration-300 cursor-pointer">
       <div className="relative overflow-hidden">
-        <img 
-          src={product.image} 
+        <img
+          src={product.image}
           alt={product.name}
           className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
           onClick={() => onViewProduct(product)}
@@ -29,11 +29,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
           </div>
         )}
       </div>
-      
+
       <div className="p-6" onClick={() => onViewProduct(product)}>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-2xl font-bold text-[#970048]">
@@ -45,13 +45,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
               </span>
             )}
           </div>
-          <button 
+          <button
             onClick={() => onAddToCart(product)}
             className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors group"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(product);
-            }}
           >
             <ShoppingBag size={18} />
           </button>
