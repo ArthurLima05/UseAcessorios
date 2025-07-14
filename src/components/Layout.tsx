@@ -1,24 +1,26 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Cart } from './Cart';
-import { useCart } from '../hooks/useCart';
 
 interface LayoutProps {
   children: React.ReactNode;
   onGuidesClick: () => void;
+  cart: {
+    items: any[];
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+    addItem: (product: any) => void;
+    removeItem: (productId: number) => void;
+    updateQuantity: (productId: number, quantity: number) => void;
+    clearCart: () => void;
+    getTotal: () => number;
+    getItemsCount: () => number;
+  };
+  onCheckout: () => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, onGuidesClick }) => {
-  const cart = useCart();
-  const navigate = useNavigate();
-
-  const handleCheckout = () => {
-    navigate('/checkout');
-    cart.setIsOpen(false);
-  };
-
+export const Layout: React.FC<LayoutProps> = ({ children, onGuidesClick, cart, onCheckout }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
@@ -36,7 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, onGuidesClick }) => {
         onUpdateQuantity={cart.updateQuantity}
         onRemoveItem={cart.removeItem}
         total={cart.getTotal()}
-        onCheckout={handleCheckout}
+        onCheckout={onCheckout}
       />
 
       <Footer />

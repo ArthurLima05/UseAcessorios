@@ -46,7 +46,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
             )}
           </div>
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('Botão de adicionar ao carrinho clicado:', product);
+              onAddToCart(product);
+            }}
             className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors group"
           >
             <ShoppingBag size={18} />

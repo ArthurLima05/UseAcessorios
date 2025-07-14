@@ -22,9 +22,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
+    console.log('Adicionando ao carrinho - quantidade:', quantity, 'produto:', product);
     for (let i = 0; i < quantity; i++) {
       onAddToCart(product);
     }
+    alert(`${quantity} ${product.name}(s) adicionado(s) ao carrinho!`);
   };
 
   return (

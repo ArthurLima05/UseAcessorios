@@ -12,7 +12,6 @@ import { Product, Guide, CartItem } from './types';
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const cart = useCart();
-  const [buyNowItems, setBuyNowItems] = useState<CartItem[] | null>(null);
 
   const handleCategorySelect = (categoryId: string) => {
     navigate(`/category/${categoryId}`);
@@ -31,7 +30,6 @@ const AppContent: React.FC = () => {
   };
 
   const handleBuyNow = (items: CartItem[]) => {
-    setBuyNowItems(items);
     navigate('/checkout', { state: { buyNowItems: items } });
     cart.setIsOpen(false);
   };
@@ -41,7 +39,7 @@ const AppContent: React.FC = () => {
   };
 
   const handleOrderComplete = () => {
-    setBuyNowItems(null);
+    // Lógica para completar o pedido
   };
 
   const handleCheckout = () => {
@@ -49,7 +47,11 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <Layout onGuidesClick={handleShowGuides}>
+    <Layout 
+      onGuidesClick={handleShowGuides}
+      cart={cart}
+      onCheckout={handleCheckout}
+    >
       <Routes>
         <Route 
           path="/" 
