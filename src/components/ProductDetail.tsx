@@ -9,6 +9,7 @@ interface ProductDetailProps {
   onAddToCart: (product: Product) => void;
   onCheckout: () => void;
   onBuyNow: (item: CartItem[]) => void;
+  showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({
@@ -16,17 +17,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   onBack,
   onAddToCart,
   onCheckout,
-  onBuyNow
+  onBuyNow,
+  showNotification
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
-    console.log('Adicionando ao carrinho - quantidade:', quantity, 'produto:', product);
     for (let i = 0; i < quantity; i++) {
       onAddToCart(product);
     }
-    alert(`${quantity} ${product.name}(s) adicionado(s) ao carrinho!`);
+    const message = quantity === 1 
+      ? `${product.name} adicionado ao carrinho!`
+      : `${quantity} ${product.name}s adicionados ao carrinho!`;
+    showNotification(message, 'success');
   };
 
   return (

@@ -7,11 +7,13 @@ import { Product, CartItem } from '../types';
 interface ProductDetailPageProps {
   onAddToCart: (product: Product) => void;
   onBuyNow: (items: CartItem[]) => void;
+  showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onAddToCart,
-  onBuyNow
+  onBuyNow,
+  showNotification
 }) => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       onAddToCart={onAddToCart}
       onCheckout={() => navigate('/checkout')}
       onBuyNow={onBuyNow}
+      showNotification={showNotification}
     />
   );
 };
