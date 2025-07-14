@@ -11,7 +11,12 @@ import { Footer } from './components/Footer';
 import { GuidesSection } from './components/GuidesSection';
 import { products } from './data/products';
 import { useCart } from './hooks/useCart';
-import { Product, Guide } from './types';
+import { Product, Guide, CartItem } from './types';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -20,10 +25,18 @@ function App() {
   const [showCategoryProducts, setShowCategoryProducts] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
   const cart = useCart();
+  const [buyNowItems, setBuyNowItems] = useState<CartItem[] | null>(null);
 
   const filteredProducts = selectedCategory === 'all'
     ? products
     : products.filter(product => product.category === selectedCategory);
+
+  const handleBuyNow = (items: CartItem[]) => {
+    setBuyNowItems(items); // só um produto no array
+    setShowCheckout(true);
+    cart.setIsOpen(false); // fecha o carrinho caso esteja aberto
+  };
+
 
   // const handleCategoryChange = (category: string) => {
   //  setSelectedCategory(category);
@@ -80,13 +93,21 @@ function App() {
           cartItemsCount={cart.getItemsCount()}
           onGuidesClick={handleShowGuides}
         />
-
-        <Checkout
-          items={cart.items}
-          total={cart.getTotal()}
-          onBack={() => setShowCheckout(false)}
-          onOrderComplete={handleOrderComplete}
-        />
+        <Elements stripe={stripePromise}>
+          <Checkout
+            items={buyNowItems || cart.items}
+            total={
+              buyNowItems
+                ? buyNowItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+                : cart.getTotal()
+            }
+            onBack={() => {
+              setShowCheckout(false);
+              setBuyNowItems(null);                // Limpa o produto comprado direto ao voltar
+            }}
+            onOrderComplete={handleOrderComplete}
+          />
+        </Elements>
 
         <Footer />
       </div>
@@ -180,6 +201,7 @@ function App() {
           onBack={handleBackToProducts}
           onAddToCart={cart.addItem}
           onCheckout={handleCheckout}
+          onBuyNow={handleBuyNow}
         />
 
         <Cart

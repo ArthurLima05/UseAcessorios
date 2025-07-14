@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CreditCard, Smartphone, Shield, Truck, CheckCircle } from 'lucide-react';
 import { CartItem } from '../types';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
 interface CheckoutProps {
   items: CartItem[];
@@ -37,9 +38,42 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
     }
   };
 
-  const handleConfirmOrder = () => {
-    onOrderComplete();
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleConfirmOrder = async () => {
+    if (!stripe || !elements) return;
+
+    try {
+      const res = await fetch('http://localhost:4242/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Math.round(finalTotal * 100) }) // em centavos
+      });
+
+      const { clientSecret } = await res.json();
+
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement)!,
+          billing_details: {
+            name: formData.name,
+            email: formData.email,
+          }
+        }
+      });
+
+      if (result.error) {
+        alert(`Erro no pagamento: ${result.error.message}`);
+      } else if (result.paymentIntent.status === 'succeeded') {
+        onOrderComplete(); // muda para tela de confirmação
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao processar o pagamento.");
+    }
   };
+
 
   const shipping = total >= 500 ? 0 : 25;
   const finalTotal = total + shipping;
@@ -129,8 +163,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                   <div
                     onClick={() => setPaymentMethod('pix')}
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${paymentMethod === 'pix'
-                        ? 'border-[#970048] bg-[#f8dbe0]'
-                        : 'border-gray-200 hover:border-[#f8dbe0]'
+                      ? 'border-[#970048] bg-[#f8dbe0]'
+                      : 'border-gray-200 hover:border-[#f8dbe0]'
                       }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -145,8 +179,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                   <div
                     onClick={() => setPaymentMethod('card')}
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${paymentMethod === 'card'
-                        ? 'border-[#970048] bg-[#f8dbe0]'
-                        : 'border-gray-200 hover:border-[#f8dbe0]'
+                      ? 'border-[#970048] bg-[#f8dbe0]'
+                      : 'border-gray-200 hover:border-[#f8dbe0]'
                       }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -254,59 +288,12 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
                 {paymentMethod === 'card' && (
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados do Cartão</h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Número do Cartão
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.cardNumber}
-                          onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
-                          placeholder="0000 0000 0000 0000"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Nome no Cartão
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.cardName}
-                          onChange={(e) => handleInputChange('cardName', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
-                          placeholder="Nome como no cartão"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Validade
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.cardExpiry}
-                          onChange={(e) => handleInputChange('cardExpiry', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
-                          placeholder="MM/AA"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          CVV
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.cardCvv}
-                          onChange={(e) => handleInputChange('cardCvv', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
-                          placeholder="000"
-                        />
-                      </div>
+                    <div className="w-full px-3 py-2 border border-gray-300 rounded-lg focus-within:ring-[#970048] focus-within:border-[#970048]">
+                      <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
                     </div>
                   </div>
                 )}
+
 
                 <button
                   onClick={handleNextStep}

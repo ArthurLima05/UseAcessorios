@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Heart, Share2, Star, Shield, Truck, RotateCcw } from 'lucide-react';
-import { Product } from '../types';
+import { Product, CartItem } from '../types';
+
 
 interface ProductDetailProps {
   product: Product;
   onBack: () => void;
   onAddToCart: (product: Product) => void;
   onCheckout: () => void;
+  onBuyNow: (item: CartItem[]) => void;
 }
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({
   product,
   onBack,
   onAddToCart,
-  onCheckout
+  onCheckout,
+  onBuyNow
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -155,7 +158,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   Adicionar ao Carrinho
                 </button>
                 <button
-                  onClick={onCheckout}
+                  onClick={() => onBuyNow([
+                    {
+                      product: product,
+                      quantity: quantity,
+                    },
+                  ])}
                   className="w-full border border-[#970048] text-[#970048] py-4 rounded-lg font-medium hover:bg-[#970048] hover:text-white transition-colors">
                   Comprar Agora
                 </button>

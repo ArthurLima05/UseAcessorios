@@ -15,7 +15,7 @@ export const products: Product[] = [
       "https://images.pexels.com/photos/1454171/pexels-photo-1454171.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400"
     ],
-    inStock: true,
+    inStock: false,
     featured: true
   },
   {
