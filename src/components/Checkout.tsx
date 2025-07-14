@@ -2,17 +2,26 @@ import React, { useState } from 'react';
 import { ArrowLeft, CreditCard, Smartphone, Shield, Truck, CheckCircle } from 'lucide-react';
 import { CartItem } from '../types';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { paymentService, authService } from '../services/api';
 
 interface CheckoutProps {
   items: CartItem[];
   total: number;
   onBack: () => void;
   onOrderComplete: () => void;
+  showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrderComplete }) => {
+export const Checkout: React.FC<CheckoutProps> = ({ 
+  items, 
+  total, 
+  onBack, 
+  onOrderComplete,
+  showNotification 
+}) => {
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'card'>('pix');
   const [step, setStep] = useState<'payment' | 'details' | 'confirmation'>('payment');
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -41,36 +50,80 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
   const stripe = useStripe();
   const elements = useElements();
 
+  // Verificar se usuário está logado
+  const currentUser = authService.getCurrentUser();
+  
+  // Preencher dados do usuário logado
+  React.useEffect(() => {
+    if (currentUser) {
+      setFormData(prev => ({
+        ...prev,
+        email: currentUser.email,
+        name: currentUser.name
+      }));
+    }
+  }, [currentUser]);
+
   const handleConfirmOrder = async () => {
-    if (!stripe || !elements) return;
+    if (!currentUser) {
+      showNotification('Você precisa estar logado para finalizar a compra', 'error');
+      return;
+    }
+
+    if (paymentMethod === 'card' && (!stripe || !elements)) {
+      showNotification('Erro ao carregar sistema de pagamento', 'error');
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:4242/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: Math.round(finalTotal * 100) }) // em centavos
+      // Preparar dados dos itens para o backend
+      const orderItems = items.map(item => ({
+        productId: item.product.id,
+        quantity: item.quantity
+      }));
+
+      // Criar payment intent no backend seguro
+      const paymentData = await paymentService.createPaymentIntent({
+        items: orderItems,
+        userEmail: formData.email,
+        userName: formData.name
       });
 
-      const { clientSecret } = await res.json();
-
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement)!,
-          billing_details: {
-            name: formData.name,
-            email: formData.email,
+      if (paymentMethod === 'card') {
+        // Processar pagamento com cartão
+        const result = await stripe!.confirmCardPayment(paymentData.clientSecret, {
+          payment_method: {
+            card: elements!.getElement(CardElement)!,
+            billing_details: {
+              name: formData.name,
+              email: formData.email,
+            }
           }
-        }
-      });
+        });
 
-      if (result.error) {
-        alert(`Erro no pagamento: ${result.error.message}`);
-      } else if (result.paymentIntent.status === 'succeeded') {
-        onOrderComplete(); // muda para tela de confirmação
+        if (result.error) {
+          showNotification(`Erro no pagamento: ${result.error.message}`, 'error');
+          return;
+        }
+        
+        if (result.paymentIntent.status === 'succeeded') {
+          setStep('confirmation');
+          showNotification('Pagamento processado com sucesso!', 'success');
+        }
+      } else {
+        // PIX - apenas simular por enquanto
+        setStep('confirmation');
+        showNotification('Código PIX gerado com sucesso!', 'success');
       }
+
     } catch (error) {
-      console.error(error);
-      alert("Erro ao processar o pagamento.");
+      console.error('Erro no checkout:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar pagamento';
+      showNotification(errorMessage, 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -349,9 +402,10 @@ export const Checkout: React.FC<CheckoutProps> = ({ items, total, onBack, onOrde
               {step === 'details' && (
                 <button
                   onClick={handleConfirmOrder}
-                  className="w-full mt-6 bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
+                  disabled={loading}
+                  className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Finalizar Pedido
+                  {loading ? 'Processando...' : 'Finalizar Pedido'}
                 </button>
               )}
 

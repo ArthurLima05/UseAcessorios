@@ -61,6 +61,7 @@ const AppContent: React.FC = () => {
         onGuidesClick={handleShowGuides}
         cart={cart}
         onCheckout={handleCheckout}
+        showNotification={notification.showNotification}
       >
         <Routes>
           <Route 
@@ -107,6 +108,7 @@ const AppContent: React.FC = () => {
                 cartTotal={cart.getTotal()}
                 onOrderComplete={handleOrderComplete}
                 onClearCart={cart.clearCart}
+                showNotification={notification.showNotification}
               />
             } 
           />

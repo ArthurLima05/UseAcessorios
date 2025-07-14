@@ -12,13 +12,15 @@ interface CheckoutPageProps {
   cartTotal: number;
   onOrderComplete: () => void;
   onClearCart: () => void;
+  showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   cartItems,
   cartTotal,
   onOrderComplete,
-  onClearCart
+  onClearCart,
+  showNotification
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,6 +51,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         total={total}
         onBack={handleBack}
         onOrderComplete={handleOrderComplete}
+        showNotification={showNotification}
       />
     </Elements>
   );

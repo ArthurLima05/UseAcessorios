@@ -6,6 +6,7 @@ import { Cart } from './Cart';
 interface LayoutProps {
   children: React.ReactNode;
   onGuidesClick: () => void;
+  showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
   cart: {
     items: any[];
     isOpen: boolean;
@@ -20,13 +21,14 @@ interface LayoutProps {
   onCheckout: () => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, onGuidesClick, cart, onCheckout }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, onGuidesClick, cart, onCheckout, showNotification }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
         onCartClick={() => cart.setIsOpen(true)}
         cartItemsCount={cart.getItemsCount()}
         onGuidesClick={onGuidesClick}
+        showNotification={showNotification}
       />
 
       {children}
