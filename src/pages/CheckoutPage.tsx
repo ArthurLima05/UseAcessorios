@@ -1,0 +1,55 @@
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { Checkout } from '../components/Checkout';
+import { CartItem } from '../types';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+interface CheckoutPageProps {
+  cartItems: CartItem[];
+  cartTotal: number;
+  onOrderComplete: () => void;
+  onClearCart: () => void;
+}
+
+export const CheckoutPage: React.FC<CheckoutPageProps> = ({
+  cartItems,
+  cartTotal,
+  onOrderComplete,
+  onClearCart
+}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Pega os itens do buyNow se existirem no state da navegação
+  const buyNowItems = location.state?.buyNowItems as CartItem[] | null;
+  const items = buyNowItems || cartItems;
+  const total = buyNowItems 
+    ? buyNowItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+    : cartTotal;
+
+  const handleOrderComplete = () => {
+    onOrderComplete();
+    if (!buyNowItems) {
+      onClearCart();
+    }
+    navigate('/');
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  return (
+    <Elements stripe={stripePromise}>
+      <Checkout
+        items={items}
+        total={total}
+        onBack={handleBack}
+        onOrderComplete={handleOrderComplete}
+      />
+    </Elements>
+  );
+};
