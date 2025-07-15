@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Notification } from './components/Notification';
@@ -47,11 +47,11 @@ const AppContent: React.FC = () => {
   };
 
   const handleOrderComplete = () => {
-    // Lógica para completar o pedido
+    notification.showNotification('Pedido realizado com sucesso!', 'success');
   };
 
   const handleCheckout = () => {
-    cart.setIsOpen(false); // Fecha o carrinho antes de ir para o checkout
+    cart.setIsOpen(false);
     navigate('/checkout');
   };
 

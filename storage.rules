@@ -1,0 +1,31 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Imagens de produtos - Leitura pública, escrita restrita
+    match /products/{allPaths=**} {
+      // Permitir leitura pública das imagens
+      allow read: if true;
+      
+      // Escrita apenas para administradores
+      // Em produção, implemente autenticação adequada
+      allow write: if false; // Desabilitado por segurança
+    }
+    
+    // Imagens de guias - Leitura pública, escrita restrita
+    match /guides/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // Apenas via Admin SDK
+    }
+    
+    // Outras imagens do sistema
+    match /system/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // Apenas via Admin SDK
+    }
+    
+    // Regra padrão - negar tudo que não foi especificado
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

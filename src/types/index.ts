@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   originalPrice?: number;
@@ -9,6 +9,9 @@ export interface Product {
   images: string[];
   inStock: boolean;
   featured?: boolean;
+  active: boolean;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface CartItem {
@@ -16,7 +19,7 @@ export interface CartItem {
   quantity: number;
 }
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   count: number;
@@ -31,4 +34,28 @@ export interface Guide {
   description: string;
   category: string;
   downloadUrl?: string;
+}
+
+export interface Order {
+  id: string;
+  customerEmail: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
+  customerCity: string;
+  customerZipCode: string;
+  items: Array<{
+    productId: string;
+    productName: string;
+    price: number;
+    quantity: number;
+    total: number;
+  }>;
+  subtotal: number;
+  shipping: number;
+  total: number;
+  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  paymentIntentId: string;
+  createdAt: any;
+  updatedAt: any;
 }

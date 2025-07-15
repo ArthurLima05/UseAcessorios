@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Produtos - Leitura pública, escrita restrita
+    match /products/{productId} {
+      // Permitir leitura pública de produtos ativos
+      allow read: if resource.data.active == true;
+      
+      // Escrita apenas para administradores autenticados
+      // Em produção, você deve implementar um sistema de roles
+      allow write: if false; // Desabilitado por segurança
+    }
+    
+    // Pedidos - Apenas escrita pelo backend via Admin SDK
+    match /orders/{orderId} {
+      // Leitura e escrita apenas via Admin SDK (backend)
+      allow read, write: if false;
+    }
+    
+    // Categorias - Leitura pública
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if false; // Apenas via Admin SDK
+    }
+    
+    // Guias - Leitura pública
+    match /guides/{guideId} {
+      allow read: if true;
+      allow write: if false; // Apenas via Admin SDK
+    }
+    
+    // Regra padrão - negar tudo que não foi especificado
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
