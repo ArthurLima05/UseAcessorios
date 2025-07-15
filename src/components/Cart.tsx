@@ -6,17 +6,17 @@ interface CartProps {
   isOpen: boolean;
   onClose: () => void;
   items: CartItem[];
-  onUpdateQuantity: (productId: number, quantity: number) => void;
-  onRemoveItem: (productId: number) => void;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemoveItem: (productId: string) => void;
   total: number;
   onCheckout: () => void;
 }
 
-export const Cart: React.FC<CartProps> = ({ 
-  isOpen, 
-  onClose, 
-  items, 
-  onUpdateQuantity, 
+export const Cart: React.FC<CartProps> = ({
+  isOpen,
+  onClose,
+  items,
+  onUpdateQuantity,
   onRemoveItem,
   total,
   onCheckout
@@ -26,7 +26,7 @@ export const Cart: React.FC<CartProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
-      
+
       <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl">
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -35,7 +35,7 @@ export const Cart: React.FC<CartProps> = ({
               <X size={24} />
             </button>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto p-6">
             {items.length === 0 ? (
               <div className="text-center py-12">
@@ -46,33 +46,33 @@ export const Cart: React.FC<CartProps> = ({
               <div className="space-y-4">
                 {items.map(item => (
                   <div key={item.product.id} className="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg">
-                    <img 
-                      src={item.product.image} 
+                    <img
+                      src={item.product.image}
                       alt={item.product.name}
                       className="w-16 h-16 object-cover rounded-lg"
                     />
                     <div className="flex-1">
                       <h4 className="font-medium text-gray-900">{item.product.name}</h4>
                       <p className="text-[#970048] font-semibold">
-                        R$ {item.product.price.toLocaleString('pt-BR')}
+                        R$ {(item.product.price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <button 
+                      <button
                         onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
                         className="p-1 rounded-full hover:bg-gray-200"
                       >
                         <Minus size={16} />
                       </button>
                       <span className="w-8 text-center">{item.quantity}</span>
-                      <button 
+                      <button
                         onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
                         className="p-1 rounded-full hover:bg-gray-200"
                       >
                         <Plus size={16} />
                       </button>
                     </div>
-                    <button 
+                    <button
                       onClick={() => onRemoveItem(item.product.id)}
                       className="text-red-500 hover:text-red-700"
                     >
@@ -83,16 +83,16 @@ export const Cart: React.FC<CartProps> = ({
               </div>
             )}
           </div>
-          
+
           {items.length > 0 && (
             <div className="border-t border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-lg font-semibold">Total:</span>
                 <span className="text-2xl font-bold text-[#970048]">
-                  R$ {total.toLocaleString('pt-BR')}
+                  R$ {(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>
-              <button 
+              <button
                 onClick={onCheckout}
                 className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
               >

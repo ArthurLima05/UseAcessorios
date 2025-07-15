@@ -27,7 +27,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     for (let i = 0; i < quantity; i++) {
       onAddToCart(product);
     }
-    const message = quantity === 1 
+    const message = quantity === 1
       ? `${product.name} adicionado ao carrinho!`
       : `${quantity} ${product.name}s adicionados ao carrinho!`;
     showNotification(message, 'success');
@@ -97,11 +97,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
               <div className="flex items-center space-x-4 mb-6">
                 <span className="text-3xl font-bold text-[#970048]">
-                  R$ {product.price.toLocaleString('pt-BR')}
+                  R$ {(product.price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
                 {product.originalPrice && (
                   <span className="text-xl text-gray-500 line-through">
-                    R$ {product.originalPrice.toLocaleString('pt-BR')}
+                    R$ {(product.originalPrice / 100).toLocaleString('pt-BR')}
                   </span>
                 )}
               </div>
@@ -118,7 +118,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-600">Material:</span>
-                  <span className="ml-2 font-medium">Ouro 18k</span>
+                  <span className="ml-2 font-medium">{product.material}</span>
                 </div>
                 <div>
                   <span className="text-gray-600">Categoria:</span>
@@ -127,10 +127,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <div>
                   <span className="text-gray-600">Garantia:</span>
                   <span className="ml-2 font-medium">2 anos</span>
-                </div>
-                <div>
-                  <span className="text-gray-600">Certificado:</span>
-                  <span className="ml-2 font-medium">Incluído</span>
                 </div>
               </div>
             </div>

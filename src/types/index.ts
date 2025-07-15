@@ -12,6 +12,7 @@ export interface Product {
   active: boolean;
   createdAt: any;
   updatedAt: any;
+  material: string;
 }
 
 export interface CartItem {
@@ -26,7 +27,7 @@ export interface Category {
 }
 
 export interface Guide {
-  id: number;
+  id: string;
   name: string;
   price: number;
   originalPrice?: number;

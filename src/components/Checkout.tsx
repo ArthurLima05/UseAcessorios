@@ -12,12 +12,12 @@ interface CheckoutProps {
   showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export const Checkout: React.FC<CheckoutProps> = ({ 
-  items, 
-  total, 
-  onBack, 
+export const Checkout: React.FC<CheckoutProps> = ({
+  items,
+  total,
+  onBack,
   onOrderComplete,
-  showNotification 
+  showNotification
 }) => {
   const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
   const [loading, setLoading] = useState(false);
@@ -134,7 +134,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                 )}
                 <div className="border-t pt-2 flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>R$ {(orderData.total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span>R$ {orderData.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
@@ -282,24 +282,24 @@ export const Checkout: React.FC<CheckoutProps> = ({
             {step === 'payment' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados do Cartão</h2>
-                
+
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Informações do Cartão
                   </label>
                   <div className="w-full px-3 py-3 border border-gray-300 rounded-lg focus-within:ring-[#970048] focus-within:border-[#970048]">
-                    <CardElement 
-                      options={{ 
-                        style: { 
-                          base: { 
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
                             fontSize: '16px',
                             color: '#374151',
                             '::placeholder': {
                               color: '#9CA3AF',
                             },
                           },
-                        } 
-                      }} 
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -344,7 +344,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-[#970048]">
-                        R$ {(item.product.price * item.quantity / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        R$ {((item.product.price / 100) * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </p>
                     </div>
                   </div>

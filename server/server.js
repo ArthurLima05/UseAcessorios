@@ -6,8 +6,10 @@ import { body, validationResult } from 'express-validator';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import { productService, orderService } from './services/firebase.js';
+import path from 'path';
 
-dotenv.config();
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -63,22 +65,22 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 // Endpoint para criar Payment Intent
-app.post('/api/create-payment-intent', 
+app.post('/api/create-payment-intent',
   paymentLimiter,
   validatePayment,
   handleValidationErrors,
   async (req, res) => {
     try {
       const { items, customerInfo } = req.body;
-      
+
       // Validar produtos no Firebase
       const validatedItems = await productService.validateProducts(items);
-      
+
       // Calcular totais
       const subtotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
       const shipping = subtotal >= 50000 ? 0 : 2500; // R$ 25 em centavos se menor que R$ 500
       const total = subtotal + shipping;
-      
+
       // Criar Payment Intent no Stripe
       const paymentIntent = await stripe.paymentIntents.create({
         amount: total,
@@ -92,7 +94,7 @@ app.post('/api/create-payment-intent',
           shipping: shipping.toString()
         }
       });
-      
+
       // Criar pedido no Firebase com status pending
       const orderData = {
         customerEmail: customerInfo.email,
@@ -108,9 +110,9 @@ app.post('/api/create-payment-intent',
         status: 'pending',
         paymentIntentId: paymentIntent.id
       };
-      
+
       const orderId = await orderService.createOrder(orderData);
-      
+
       res.json({
         clientSecret: paymentIntent.client_secret,
         orderId,
@@ -119,11 +121,11 @@ app.post('/api/create-payment-intent',
         shipping,
         subtotal
       });
-      
+
     } catch (error) {
       console.error('Erro ao criar payment intent:', error);
-      res.status(500).json({ 
-        error: error.message || 'Erro interno do servidor' 
+      res.status(500).json({
+        error: error.message || 'Erro interno do servidor'
       });
     }
   }
@@ -136,8 +138,8 @@ app.post('/api/webhook', async (req, res) => {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body, 
-      sig, 
+      req.body,
+      sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
@@ -151,14 +153,14 @@ app.post('/api/webhook', async (req, res) => {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         console.log('💰 Pagamento confirmado:', paymentIntent.id);
-        
+
         // Atualizar status do pedido no Firebase
         await orderService.updateOrderStatus(
           null, // Não temos o orderId aqui, vamos buscar pelo paymentIntentId
           'paid',
           paymentIntent.id
         );
-        
+
         // Buscar o pedido para log
         const order = await orderService.getOrderByPaymentIntent(paymentIntent.id);
         if (order) {
@@ -169,28 +171,28 @@ app.post('/api/webhook', async (req, res) => {
             items: order.items.length
           });
         }
-        
+
         break;
-        
+
       case 'payment_intent.payment_failed':
         const failedPayment = event.data.object;
         console.log('❌ Pagamento falhou:', failedPayment.id);
-        
+
         // Atualizar status do pedido para cancelled
         await orderService.updateOrderStatus(
           null,
           'cancelled',
           failedPayment.id
         );
-        
+
         break;
-        
+
       default:
         console.log(`Evento não tratado: ${event.type}`);
     }
-    
+
     res.json({ received: true });
-    
+
   } catch (error) {
     console.error('Erro ao processar webhook:', error);
     res.status(500).json({ error: 'Erro ao processar webhook' });
@@ -199,8 +201,8 @@ app.post('/api/webhook', async (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'Use Acessórios API'
   });

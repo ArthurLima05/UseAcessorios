@@ -1,8 +1,9 @@
 import { Product } from '../types';
+import { Timestamp } from 'firebase/firestore';
 
 export const products: Product[] = [
   {
-    id: 1,
+    id: "32342",
     name: "Anel de Ouro 18k com Diamante",
     price: 2850,
     originalPrice: 3200,
@@ -16,10 +17,14 @@ export const products: Product[] = [
       "https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=400"
     ],
     inStock: false,
-    featured: true
+    featured: true,
+    active: true,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    material: 'Ouro'
   },
   {
-    id: 2,
+    id: 1,
     name: "Brincos de Pérola Clássicos",
     price: 1650,
     image: "https://images.pexels.com/photos/1454172/pexels-photo-1454172.jpeg?auto=compress&cs=tinysrgb&w=400",

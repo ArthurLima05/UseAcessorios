@@ -37,11 +37,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-2xl font-bold text-[#970048]">
-              R$ {product.price.toLocaleString('pt-BR')}
+              R$ {(product.price / 100).toLocaleString('pt-BR')}
             </span>
             {product.originalPrice && (
               <span className="text-sm text-gray-500 line-through">
-                R$ {product.originalPrice.toLocaleString('pt-BR')}
+                R$ {(product.originalPrice / 100).toLocaleString('pt-BR')}
               </span>
             )}
           </div>

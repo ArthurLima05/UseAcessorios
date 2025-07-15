@@ -22,7 +22,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
           50% OFF
         </div>
       </div>
-      
+
       <div className="p-6">
         <div className="flex items-center space-x-1 mb-2">
           {[...Array(5)].map((_, i) => (
@@ -30,15 +30,15 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
           ))}
           <span className="text-sm text-gray-600 ml-2">(127 avaliações)</span>
         </div>
-        
+
         <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
           {guide.name}
         </h3>
-        
+
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
           {guide.description}
         </p>
-        
+
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <span className="text-2xl font-bold text-[#970048]">
@@ -46,26 +46,26 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
             </span>
             {guide.originalPrice && (
               <span className="text-sm text-gray-500 line-through">
-                R$ {guide.originalPrice.toFixed(2).replace('.', ',')}
+                R$ {(guide.originalPrice / 100).toFixed(2).replace('.', ',')}
               </span>
             )}
           </div>
         </div>
-        
+
         <div className="space-y-2">
-          <button 
+          <button
             onClick={() => onPurchase(guide)}
             className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors flex items-center justify-center space-x-2"
           >
             <Download size={18} />
             <span>Comprar Agora</span>
           </button>
-          
+
           <div className="text-center">
             <span className="text-xs text-gray-500">Download imediato após pagamento</span>
           </div>
         </div>
-        
+
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>✓ Acesso vitalício</span>
