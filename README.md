@@ -4,7 +4,7 @@ Sistema de e-commerce seguro para acessórios, integrado com Firebase Firestore,
 
 ## 🔥 Características Principais
 
-### ✅ **Sistema Sem Autenticação de Usuários**
+### ✅ **Sistema de Checkout Transparente**
 - Checkout transparente sem necessidade de login
 - Segurança através de regras do Firebase
 - Experiência de compra simplificada

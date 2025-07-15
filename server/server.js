@@ -39,7 +39,7 @@ app.use('/api/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '10mb' }));
 
 // Validações
-const validatePaymentIntent = [
+const validatePayment = [
   body('items').isArray({ min: 1 }).withMessage('Items deve ser um array não vazio'),
   body('items.*.productId').isString().notEmpty().withMessage('ID do produto é obrigatório'),
   body('items.*.quantity').isInt({ min: 1, max: 10 }).withMessage('Quantidade deve ser entre 1 e 10'),
@@ -65,7 +65,7 @@ const handleValidationErrors = (req, res, next) => {
 // Endpoint para criar Payment Intent
 app.post('/api/create-payment-intent', 
   paymentLimiter,
-  validatePaymentIntent,
+  validatePayment,
   handleValidationErrors,
   async (req, res) => {
     try {
