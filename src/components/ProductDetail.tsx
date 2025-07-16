@@ -186,10 +186,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             </div>
 
             {/* Calculadora de Frete */}
-            <ShippingCalculator
-              productId={product.id}
-              onShippingCalculated={handleShippingCalculated}
-            />
+            <ShippingCalculator />
 
             {/* Benefícios */}
             <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -222,23 +219,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   </div>
                 </div>
               </div>
-              
-              {shippingCost !== null && deliveryDays !== null && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="text-sm text-gray-600">
-                    <div className="flex justify-between">
-                      <span>Frete calculado:</span>
-                      <span className="font-medium">
-                        {shippingCost === 0 ? 'GRÁTIS' : `R$ ${(shippingCost / 100).toFixed(2)}`}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Entrega em:</span>
-                      <span className="font-medium">{deliveryDays} dias úteis</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Compartilhar */}

@@ -84,7 +84,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
           paymentIntentId: paymentIntent.id,
           items: paymentData.items,
           subtotal: paymentData.subtotal,
-          shipping: paymentData.shipping,
+          shipping: 0, // Frete será calculado externamente
           total: paymentData.amount / 100 // Converter de centavos para reais
         });
         setStep('confirmation');
@@ -100,7 +100,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
     }
   };
 
-  const shipping = total >= 50000 ? 0 : 2500; // R$ 25 em centavos
+  const shipping = 0; // Frete será calculado externamente
   const finalTotal = total + shipping;
 
   if (step === 'confirmation' && orderData) {

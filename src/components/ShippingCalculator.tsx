@@ -2,23 +2,14 @@ import React, { useState } from 'react';
 import { Truck, Calculator, MapPin } from 'lucide-react';
 
 interface ShippingCalculatorProps {
-  productId: string;
-  onShippingCalculated?: (shipping: number, days: number) => void;
+  onShippingCalculated?: (zipCode: string, items: any[]) => void;
 }
 
 export const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({
-  productId,
   onShippingCalculated
 }) => {
   const [zipCode, setZipCode] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{
-    shippingCost: number;
-    deliveryDays: number;
-    freeShipping: boolean;
-  } | null>(null);
-  const [error, setError] = useState('');
 
   const formatZipCode = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -31,48 +22,21 @@ export const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({
   const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatZipCode(e.target.value);
     setZipCode(formatted);
-    setError('');
-    setResult(null);
   };
 
-  const calculateShipping = async () => {
+  const calculateShipping = () => {
     if (!zipCode || zipCode.length < 8) {
-      setError('Digite um CEP válido');
+      alert('Digite um CEP válido');
       return;
     }
 
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/calculate-shipping', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          zipCode,
-          items: [{ productId, quantity }]
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao calcular frete');
-      }
-
-      const data = await response.json();
-      setResult(data);
-      
-      if (onShippingCalculated) {
-        onShippingCalculated(data.shippingCost, data.deliveryDays);
-      }
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao calcular frete');
-    } finally {
-      setLoading(false);
+    // Aqui você pode integrar com sua API de frete
+    if (onShippingCalculated) {
+      onShippingCalculated(zipCode, [{ quantity }]);
     }
+    
+    // Por enquanto, apenas mostra uma mensagem
+    alert(`CEP ${zipCode} - Quantidade: ${quantity}\nIntegração com API de frete será implementada.`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -128,61 +92,16 @@ export const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({
 
         <button
           onClick={calculateShipping}
-          disabled={loading || !zipCode}
+          disabled={!zipCode}
           className="w-full bg-[#970048] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#7a0039] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
-          {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>Calculando...</span>
-            </>
-          ) : (
-            <>
-              <Calculator size={16} />
-              <span>Calcular Frete</span>
-            </>
-          )}
+          <Calculator size={16} />
+          <span>Calcular Frete</span>
         </button>
 
-        {error && (
-          <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        {result && (
-          <div className="bg-white p-4 rounded-lg border border-gray-200">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Frete:</span>
-                <span className="font-semibold text-[#970048]">
-                  {result.freeShipping ? (
-                    <span className="text-green-600">GRÁTIS</span>
-                  ) : (
-                    `R$ ${(result.shippingCost / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                  )}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Prazo de entrega:</span>
-                <span className="font-semibold text-gray-900">
-                  {result.deliveryDays} dias úteis
-                </span>
-              </div>
-
-              {result.freeShipping && (
-                <div className="text-xs text-green-600 bg-green-50 p-2 rounded mt-2">
-                  🎉 Frete grátis! Compras acima de R$ 500,00
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• Frete grátis para compras acima de R$ 500,00</p>
-          <p>• Prazo de entrega não inclui finais de semana</p>
+          <p>• Frete será calculado na próxima etapa</p>
+          <p>• Prazo de entrega varia conforme a região</p>
           <p>• Produto será enviado após confirmação do pagamento</p>
         </div>
       </div>

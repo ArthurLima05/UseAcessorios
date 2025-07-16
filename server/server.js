@@ -58,15 +58,6 @@ const paymentLimiter = rateLimit({
   }
 });
 
-const shippingLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minuto
-  max: 10, // máximo 10 consultas de frete por minuto
-  message: { 
-    error: 'Muitas consultas de frete. Aguarde 1 minuto.',
-    code: 'SHIPPING_RATE_LIMIT'
-  }
-});
-
 app.use(generalLimiter);
 
 // Middleware para parsing JSON (exceto para webhook)
@@ -137,27 +128,6 @@ const validatePaymentIntent = [
     .withMessage('CEP deve estar no formato 00000-000')
 ];
 
-const validateShipping = [
-  body('zipCode')
-    .isString()
-    .matches(/^\d{5}-?\d{3}$/)
-    .withMessage('CEP deve estar no formato 00000-000'),
-  
-  body('items')
-    .isArray({ min: 1, max: 20 })
-    .withMessage('Items deve ser um array com 1-20 produtos'),
-  
-  body('items.*.productId')
-    .isString()
-    .isLength({ min: 1, max: 50 })
-    .matches(/^[a-zA-Z0-9_-]+$/)
-    .withMessage('ID do produto inválido'),
-  
-  body('items.*.quantity')
-    .isInt({ min: 1, max: 10 })
-    .withMessage('Quantidade deve ser entre 1 e 10')
-];
-
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -174,70 +144,6 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Função para calcular frete baseado no CEP
-const calculateShipping = (zipCode, totalValue, totalWeight = 1) => {
-  // Normalizar CEP
-  const cleanZip = zipCode.replace(/\D/g, '');
-  const region = parseInt(cleanZip.substring(0, 2));
-  
-  // Frete grátis acima de R$ 500
-  if (totalValue >= 50000) {
-    return 0;
-  }
-  
-  // Cálculo por região (primeiros 2 dígitos do CEP)
-  let baseShipping = 0;
-  
-  if (region >= 1 && region <= 19) {
-    // Sudeste (SP, RJ, MG, ES)
-    baseShipping = 1500; // R$ 15,00
-  } else if (region >= 20 && region <= 28) {
-    // Rio de Janeiro
-    baseShipping = 1800; // R$ 18,00
-  } else if (region >= 29 && region <= 39) {
-    // Minas Gerais / Espírito Santo
-    baseShipping = 2000; // R$ 20,00
-  } else if (region >= 40 && region <= 48) {
-    // Bahia / Sergipe
-    baseShipping = 2500; // R$ 25,00
-  } else if (region >= 49 && region <= 56) {
-    // Pernambuco / Alagoas
-    baseShipping = 2800; // R$ 28,00
-  } else if (region >= 57 && region <= 63) {
-    // Ceará / Rio Grande do Norte / Paraíba
-    baseShipping = 3000; // R$ 30,00
-  } else if (region >= 64 && region <= 72) {
-    // Piauí / Maranhão / Pará
-    baseShipping = 3500; // R$ 35,00
-  } else if (region >= 73 && region <= 77) {
-    // Bahia interior
-    baseShipping = 2800; // R$ 28,00
-  } else if (region >= 78 && region <= 78) {
-    // Mato Grosso
-    baseShipping = 3200; // R$ 32,00
-  } else if (region >= 79 && region <= 79) {
-    // Mato Grosso do Sul
-    baseShipping = 3000; // R$ 30,00
-  } else if (region >= 80 && region <= 87) {
-    // Paraná
-    baseShipping = 2200; // R$ 22,00
-  } else if (region >= 88 && region <= 89) {
-    // Santa Catarina
-    baseShipping = 2400; // R$ 24,00
-  } else if (region >= 90 && region <= 99) {
-    // Rio Grande do Sul
-    baseShipping = 2600; // R$ 26,00
-  } else {
-    // Outras regiões
-    baseShipping = 3500; // R$ 35,00
-  }
-  
-  // Adicionar taxa por peso (simulação)
-  const weightFee = Math.ceil(totalWeight) * 200; // R$ 2,00 por kg
-  
-  return Math.min(baseShipping + weightFee, 5000); // Máximo R$ 50,00
-};
-
 // Health check público
 app.get('/api/health', (req, res) => {
   res.json({
@@ -247,57 +153,6 @@ app.get('/api/health', (req, res) => {
     version: '2.0.0'
   });
 });
-
-// Endpoint para calcular frete
-app.post('/api/calculate-shipping',
-  shippingLimiter,
-  validateShipping,
-  handleValidationErrors,
-  async (req, res) => {
-    try {
-      const { zipCode, items } = req.body;
-      
-      console.log(`[SHIPPING] Calculando frete para CEP: ${zipCode}`);
-      
-      // Validar produtos e calcular peso/valor
-      const validatedItems = await productService.validateProducts(items);
-      
-      const totalValue = validatedItems.reduce((sum, item) => sum + item.total, 0);
-      const totalWeight = validatedItems.reduce((sum, item) => sum + (item.weight || 0.5) * item.quantity, 0);
-      
-      const shippingCost = calculateShipping(zipCode, totalValue, totalWeight);
-      
-      // Calcular prazo de entrega baseado na região
-      const cleanZip = zipCode.replace(/\D/g, '');
-      const region = parseInt(cleanZip.substring(0, 2));
-      
-      let deliveryDays = 5; // Padrão
-      if (region >= 1 && region <= 39) {
-        deliveryDays = 3; // Sudeste
-      } else if (region >= 80 && region <= 99) {
-        deliveryDays = 4; // Sul
-      } else {
-        deliveryDays = 7; // Norte/Nordeste
-      }
-      
-      res.json({
-        zipCode,
-        shippingCost,
-        deliveryDays,
-        freeShipping: totalValue >= 50000,
-        totalValue,
-        totalWeight: Math.round(totalWeight * 100) / 100
-      });
-      
-    } catch (error) {
-      console.error('[SHIPPING] Erro ao calcular frete:', error);
-      res.status(400).json({
-        error: error.message || 'Erro ao calcular frete',
-        code: 'SHIPPING_ERROR'
-      });
-    }
-  }
-);
 
 // Endpoint para criar Payment Intent - ULTRA SEGURO
 app.post('/api/create-payment-intent',
@@ -321,11 +176,10 @@ app.post('/api/create-payment-intent',
       
       // 3. CALCULAR VALORES NO BACKEND (IMPOSSÍVEL MANIPULAR)
       const subtotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
-      const totalWeight = validatedItems.reduce((sum, item) => sum + (item.weight || 0.5) * item.quantity, 0);
-      const shipping = calculateShipping(customerInfo.zipCode, subtotal, totalWeight);
+      const shipping = 0; // Frete será calculado externamente
       const total = subtotal + shipping;
       
-      console.log(`[PAYMENT] Valores calculados - Subtotal: R$${subtotal/100}, Frete: R$${shipping/100}, Total: R$${total/100}`);
+      console.log(`[PAYMENT] Valores calculados - Subtotal: R$${subtotal/100}, Total: R$${total/100}`);
       
       // 4. CRIAR PAYMENT INTENT NO STRIPE
       const paymentIntent = await stripe.paymentIntents.create({
@@ -511,5 +365,4 @@ app.listen(PORT, () => {
   console.log(`🚫 Rotas sensíveis bloqueadas`);
   console.log(`💰 Preços blindados - sempre do Firebase`);
   console.log(`📦 Controle de estoque ativo`);
-  console.log(`🚚 Calculadora de frete ativa`);
 });
