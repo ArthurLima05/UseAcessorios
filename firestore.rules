@@ -17,6 +17,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
     
+    // Reservas de estoque - Apenas backend
+    match /stock_reservations/{reservationId} {
+      allow read, write: if false; // Apenas via Admin SDK
+    }
+    
     // Categorias - Leitura pública
     match /categories/{categoryId} {
       allow read: if true;

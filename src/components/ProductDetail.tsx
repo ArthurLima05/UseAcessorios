@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Heart, Share2, Star, Shield, Truck, RotateCcw } from 'lucide-react';
 import { Product, CartItem } from '../types';
+import { ShippingCalculator } from './ShippingCalculator';
 
 
 interface ProductDetailProps {
@@ -22,6 +23,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [shippingCost, setShippingCost] = useState<number | null>(null);
+  const [deliveryDays, setDeliveryDays] = useState<number | null>(null);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -31,6 +34,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       ? `${product.name} adicionado ao carrinho!`
       : `${quantity} ${product.name}s adicionados ao carrinho!`;
     showNotification(message, 'success');
+  };
+
+  const handleShippingCalculated = (cost: number, days: number) => {
+    setShippingCost(cost);
+    setDeliveryDays(days);
   };
 
   return (
@@ -150,6 +158,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     +
                   </button>
                 </div>
+                {product.quantity && (
+                  <span className="text-sm text-gray-600">
+                    {product.quantity} disponíveis
+                  </span>
+                )}
               </div>
 
               <div className="space-y-3">
@@ -171,6 +184,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* Calculadora de Frete */}
+            <ShippingCalculator
+              productId={product.id}
+              onShippingCalculated={handleShippingCalculated}
+            />
 
             {/* Benefícios */}
             <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -203,6 +222,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   </div>
                 </div>
               </div>
+              
+              {shippingCost !== null && deliveryDays !== null && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="text-sm text-gray-600">
+                    <div className="flex justify-between">
+                      <span>Frete calculado:</span>
+                      <span className="font-medium">
+                        {shippingCost === 0 ? 'GRÁTIS' : `R$ ${(shippingCost / 100).toFixed(2)}`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Entrega em:</span>
+                      <span className="font-medium">{deliveryDays} dias úteis</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Compartilhar */}

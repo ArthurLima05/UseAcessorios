@@ -8,6 +8,8 @@ export interface Product {
   description: string;
   images: string[];
   inStock: boolean;
+  quantity: number;
+  weight?: number;
   featured?: boolean;
   active: boolean;
   createdAt: any;

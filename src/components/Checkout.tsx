@@ -85,7 +85,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
           items: paymentData.items,
           subtotal: paymentData.subtotal,
           shipping: paymentData.shipping,
-          total: paymentData.amount
+          total: paymentData.amount / 100 // Converter de centavos para reais
         });
         setStep('confirmation');
         showNotification('Pagamento processado com sucesso!', 'success');
