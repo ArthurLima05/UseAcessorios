@@ -22,6 +22,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
   const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
   const [loading, setLoading] = useState(false);
   const [orderData, setOrderData] = useState<any>(null);
+  const [installments, setInstallments] = useState(1);
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -33,6 +34,27 @@ export const Checkout: React.FC<CheckoutProps> = ({
 
   const stripe = useStripe();
   const elements = useElements();
+
+  // Calcular valor das parcelas
+  const calculateInstallmentValue = (totalValue: number, installmentCount: number) => {
+    if (installmentCount === 1) return totalValue;
+    
+    // Aplicar juros: 4% por parcela adicional
+    const interestRate = (installmentCount - 1) * 0.04;
+    const totalWithInterest = totalValue * (1 + interestRate);
+    return totalWithInterest / installmentCount;
+  };
+
+  const getInstallmentText = (installmentCount: number) => {
+    if (installmentCount === 1) {
+      return `À vista - R$ ${(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    }
+    
+    const installmentValue = calculateInstallmentValue(total, installmentCount);
+    const totalWithInterest = installmentValue * installmentCount;
+    
+    return `${installmentCount}x de R$ ${(installmentValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (Total: R$ ${(totalWithInterest / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })})`;
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -285,6 +307,29 @@ export const Checkout: React.FC<CheckoutProps> = ({
 
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Forma de Pagamento
+                  </label>
+                  <div className="space-y-2">
+                    {[1, 2, 3, 4, 5].map(count => (
+                      <label key={count} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="installments"
+                          value={count}
+                          checked={installments === count}
+                          onChange={(e) => setInstallments(parseInt(e.target.value))}
+                          className="text-[#970048] focus:ring-[#970048]"
+                        />
+                        <span className="text-sm font-medium text-gray-900">
+                          {getInstallmentText(count)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Informações do Cartão
                   </label>
                   <div className="w-full px-3 py-3 border border-gray-300 rounded-lg focus-within:ring-[#970048] focus-within:border-[#970048]">
@@ -362,7 +407,12 @@ export const Checkout: React.FC<CheckoutProps> = ({
                 </div>
                 <div className="flex justify-between text-lg font-semibold text-[#970048] border-t pt-2">
                   <span>Total</span>
-                  <span>R$ {(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span>
+                    {installments === 1 
+                      ? `R$ ${(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                      : `${installments}x de R$ ${(calculateInstallmentValue(finalTotal, installments) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                    }
+                  </span>
                 </div>
               </div>
 

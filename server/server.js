@@ -287,9 +287,6 @@ app.post('/api/webhook', async (req, res) => {
           // 2. Confirmar redução de estoque
           await productService.confirmStockReduction(order.reservationId);
           
-          // 3. Desativar produtos sem estoque
-          await productService.deactivateOutOfStockProducts(order.items);
-          
           console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
           console.log(`[WEBHOOK] 📦 Cliente: ${order.customerEmail}`);
           console.log(`[WEBHOOK] 💵 Valor: R$${order.total/100}`);

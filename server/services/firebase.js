@@ -116,12 +116,48 @@ export const productService = {
   async confirmStockReduction(reservationId) {
     try {
       const reservationRef = db.collection('stock_reservations').doc(reservationId);
+      const reservationSnap = await reservationRef.get();
       
-      await reservationRef.update({
+      if (!reservationSnap.exists) {
+        console.log(`[STOCK] Reserva não encontrada: ${reservationId}`);
+        return;
+      }
+      
+      const reservation = reservationSnap.data();
+      const batch = db.batch();
+      
+      // Verificar e desativar produtos com estoque zero
+      for (const item of reservation.items) {
+        const productRef = db.collection('products').doc(item.productId);
+        const productSnap = await productRef.get();
+        
+        if (productSnap.exists) {
+          const product = productSnap.data();
+          const newQuantity = product.quantity || 0;
+          
+          // Se quantidade chegou a zero, desativar produto
+          if (newQuantity <= 0) {
+            batch.update(productRef, {
+              quantity: 0,
+              inStock: false,
+              active: false,
+              deactivatedAt: new Date(),
+              deactivatedReason: 'out_of_stock',
+              updatedAt: new Date()
+            });
+            
+            console.log(`[STOCK] Produto desativado por falta de estoque: ${item.productId}`);
+          }
+        }
+      }
+      
+      // Marcar reserva como confirmada
+      batch.update(reservationRef, {
         status: 'confirmed',
         confirmedAt: new Date()
       });
       
+      await batch.commit();
       console.log(`[STOCK] Redução confirmada: ${reservationId}`);
       
     } catch (error) {
@@ -151,11 +187,20 @@ export const productService = {
         
         if (productSnap.exists) {
           const currentQuantity = productSnap.data().quantity || 0;
-          batch.update(productRef, {
-            quantity: currentQuantity + item.quantity,
-            active: true, // Reativar se estava desativado
+          const newQuantity = currentQuantity + item.quantity;
+          
+          const updateData = {
+            quantity: newQuantity,
             updatedAt: new Date()
-          });
+          };
+          
+          // Se quantidade > 0, reativar produto
+          if (newQuantity > 0) {
+            updateData.inStock = true;
+            updateData.active = true;
+          }
+          
+          batch.update(productRef, updateData);
         }
       }
       
@@ -175,40 +220,6 @@ export const productService = {
     }
   },
 
-  // Desativar produtos sem estoque
-  async deactivateOutOfStockProducts(orderItems) {
-    try {
-      const batch = db.batch();
-      
-      for (const item of orderItems) {
-        const productRef = db.collection('products').doc(item.productId);
-        const productSnap = await productRef.get();
-        
-        if (productSnap.exists) {
-          const product = productSnap.data();
-          
-          // Se quantidade chegou a zero, desativar
-          if (product.quantity <= 0) {
-            batch.update(productRef, {
-              active: false,
-              inStock: false,
-              deactivatedAt: new Date(),
-              deactivatedReason: 'out_of_stock',
-              updatedAt: new Date()
-            });
-            
-            console.log(`[STOCK] Produto desativado por falta de estoque: ${item.productId}`);
-          }
-        }
-      }
-      
-      await batch.commit();
-      
-    } catch (error) {
-      console.error('Erro ao desativar produtos:', error);
-      // Não falhar o processo por causa disso
-    }
-  },
 
   // Limpeza automática de reservas expiradas (executar periodicamente)
   async cleanupExpiredReservations() {
