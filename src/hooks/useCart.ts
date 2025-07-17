@@ -42,12 +42,12 @@ export const useCart = () => {
     });
   };
 
-  const removeItem = (productId: number) => {
+  const removeItem = (productId: string) => {
     console.log('Removendo produto do carrinho:', productId);
     setItems(prev => prev.filter(item => item.product.id !== productId));
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number) => {
     console.log('Atualizando quantidade:', productId, quantity);
     if (quantity <= 0) {
       removeItem(productId);

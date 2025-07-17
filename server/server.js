@@ -6,9 +6,8 @@ import { body, validationResult } from 'express-validator';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import { productService, orderService } from './services/firebase.js';
-import path from 'path';
 
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config();
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -41,7 +40,7 @@ app.use(cors({
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // máximo 100 requests por IP
-  message: { 
+  message: {
     error: 'Muitas tentativas. Tente novamente em 15 minutos.',
     code: 'RATE_LIMIT_EXCEEDED'
   },
@@ -52,7 +51,7 @@ const generalLimiter = rateLimit({
 const paymentLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minuto
   max: 3, // máximo 3 tentativas de pagamento por minuto
-  message: { 
+  message: {
     error: 'Muitas tentativas de pagamento. Aguarde 1 minuto.',
     code: 'PAYMENT_RATE_LIMIT'
   }
@@ -62,7 +61,7 @@ app.use(generalLimiter);
 
 // Middleware para parsing JSON (exceto para webhook)
 app.use('/api/webhook', express.raw({ type: 'application/json' }));
-app.use(express.json({ 
+app.use(express.json({
   limit: '1mb',
   strict: true
 }));
@@ -80,48 +79,48 @@ const validatePaymentIntent = [
   body('items')
     .isArray({ min: 1, max: 20 })
     .withMessage('Items deve ser um array com 1-20 produtos'),
-  
+
   body('items.*.productId')
     .isString()
     .isLength({ min: 1, max: 50 })
     .matches(/^[a-zA-Z0-9_-]+$/)
     .withMessage('ID do produto inválido'),
-  
+
   body('items.*.quantity')
     .isInt({ min: 1, max: 10 })
     .withMessage('Quantidade deve ser entre 1 e 10'),
-  
+
   body('customerInfo.email')
     .isEmail()
     .normalizeEmail()
     .isLength({ max: 100 })
     .withMessage('Email inválido'),
-  
+
   body('customerInfo.name')
     .isString()
     .trim()
     .isLength({ min: 2, max: 100 })
     .matches(/^[a-zA-ZÀ-ÿ\s]+$/)
     .withMessage('Nome deve conter apenas letras e espaços'),
-  
+
   body('customerInfo.phone')
     .isString()
     .matches(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)
     .withMessage('Telefone deve estar no formato (11) 99999-9999'),
-  
+
   body('customerInfo.address')
     .isString()
     .trim()
     .isLength({ min: 10, max: 200 })
     .withMessage('Endereço deve ter entre 10 e 200 caracteres'),
-  
+
   body('customerInfo.city')
     .isString()
     .trim()
     .isLength({ min: 2, max: 50 })
     .matches(/^[a-zA-ZÀ-ÿ\s]+$/)
     .withMessage('Cidade deve conter apenas letras'),
-  
+
   body('customerInfo.zipCode')
     .isString()
     .matches(/^\d{5}-?\d{3}$/)
@@ -160,27 +159,28 @@ app.post('/api/create-payment-intent',
   validatePaymentIntent,
   handleValidationErrors,
   async (req, res) => {
+
     try {
       const { items, customerInfo } = req.body;
-      
+
       console.log(`[PAYMENT] Iniciando pagamento para: ${customerInfo.email}`);
       console.log(`[PAYMENT] Items recebidos:`, items.map(i => `${i.productId}:${i.quantity}`));
-      
+
       // 1. VALIDAR PRODUTOS NO FIREBASE (PREÇOS REAIS)
       const validatedItems = await productService.validateProducts(items);
       console.log(`[PAYMENT] Produtos validados:`, validatedItems.length);
-      
+
       // 2. RESERVAR ESTOQUE TEMPORARIAMENTE
       const reservationId = await productService.reserveStock(validatedItems);
       console.log(`[PAYMENT] Estoque reservado: ${reservationId}`);
-      
+
       // 3. CALCULAR VALORES NO BACKEND (IMPOSSÍVEL MANIPULAR)
       const subtotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
       const shipping = 0; // Frete será calculado externamente
       const total = subtotal + shipping;
-      
-      console.log(`[PAYMENT] Valores calculados - Subtotal: R$${subtotal/100}, Total: R$${total/100}`);
-      
+
+      console.log(`[PAYMENT] Valores calculados - Subtotal: R$${subtotal / 100}, Total: R$${total / 100}`);
+
       // 4. CRIAR PAYMENT INTENT NO STRIPE
       const paymentIntent = await stripe.paymentIntents.create({
         amount: total,
@@ -199,7 +199,7 @@ app.post('/api/create-payment-intent',
           timestamp: new Date().toISOString()
         }
       });
-      
+
       // 5. CRIAR PEDIDO PENDENTE NO FIREBASE
       const orderData = {
         customerEmail: customerInfo.email,
@@ -218,10 +218,10 @@ app.post('/api/create-payment-intent',
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      
+
       const orderId = await orderService.createOrder(orderData);
       console.log(`[PAYMENT] Pedido criado: ${orderId}`);
-      
+
       res.json({
         clientSecret: paymentIntent.client_secret,
         orderId,
@@ -237,15 +237,15 @@ app.post('/api/create-payment-intent',
         subtotal,
         reservationId
       });
-      
+
     } catch (error) {
       console.error('[PAYMENT] Erro ao criar payment intent:', error);
-      
+
       // Log de segurança para tentativas suspeitas
       if (error.message.includes('Produto') || error.message.includes('estoque')) {
         console.log(`[SECURITY] Tentativa suspeita de ${req.ip}: ${error.message}`);
       }
-      
+
       res.status(400).json({
         error: error.message || 'Erro ao processar pagamento',
         code: 'PAYMENT_ERROR'
@@ -258,7 +258,7 @@ app.post('/api/create-payment-intent',
 app.post('/api/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
-  
+
   try {
     // Verificar assinatura do Stripe
     event = stripe.webhooks.constructEvent(
@@ -270,59 +270,59 @@ app.post('/api/webhook', async (req, res) => {
     console.error(`[WEBHOOK] Assinatura inválida: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  
+
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         console.log(`[WEBHOOK] 💰 Pagamento confirmado: ${paymentIntent.id}`);
-        
+
         // Buscar pedido pelo Payment Intent ID
         const order = await orderService.getOrderByPaymentIntent(paymentIntent.id);
-        
+
         if (order) {
           // 1. Atualizar status do pedido
           await orderService.updateOrderStatus(order.id, 'paid');
-          
+
           // 2. Confirmar redução de estoque
           await productService.confirmStockReduction(order.reservationId);
-          
+
           console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
           console.log(`[WEBHOOK] 📦 Cliente: ${order.customerEmail}`);
-          console.log(`[WEBHOOK] 💵 Valor: R$${order.total/100}`);
-          
+          console.log(`[WEBHOOK] 💵 Valor: R$${order.total / 100}`);
+
         } else {
           console.error(`[WEBHOOK] ❌ Pedido não encontrado para Payment Intent: ${paymentIntent.id}`);
         }
-        
+
         break;
-        
+
       case 'payment_intent.payment_failed':
         const failedPayment = event.data.object;
         console.log(`[WEBHOOK] ❌ Pagamento falhou: ${failedPayment.id}`);
-        
+
         // Buscar e cancelar pedido
         const failedOrder = await orderService.getOrderByPaymentIntent(failedPayment.id);
         if (failedOrder) {
           await orderService.updateOrderStatus(failedOrder.id, 'cancelled');
-          
+
           // Liberar estoque reservado
           await productService.releaseReservedStock(failedOrder.reservationId);
-          
+
           console.log(`[WEBHOOK] 🔄 Estoque liberado para pedido: ${failedOrder.id}`);
         }
-        
+
         break;
-        
+
       default:
         console.log(`[WEBHOOK] Evento não tratado: ${event.type}`);
     }
-    
+
     res.json({ received: true });
-    
+
   } catch (error) {
     console.error('[WEBHOOK] Erro ao processar webhook:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Erro ao processar webhook',
       code: 'WEBHOOK_ERROR'
     });
@@ -332,20 +332,20 @@ app.post('/api/webhook', async (req, res) => {
 // Middleware de tratamento de erros
 app.use((error, req, res, next) => {
   console.error(`[ERROR] ${new Date().toISOString()}:`, error);
-  
+
   // Log de segurança
   console.log(`[SECURITY] Erro para IP ${req.ip} na rota ${req.path}`);
-  
-  res.status(500).json({ 
+
+  res.status(500).json({
     error: 'Erro interno do servidor',
     code: 'INTERNAL_ERROR'
   });
 });
 
 // Bloquear todas as outras rotas
-app.use('*', (req, res) => {
+app.use((req, res) => {
   console.log(`[SECURITY] Tentativa de acesso a rota inexistente: ${req.method} ${req.originalUrl} - IP: ${req.ip}`);
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Endpoint não encontrado',
     code: 'NOT_FOUND'
   });

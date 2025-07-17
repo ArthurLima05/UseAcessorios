@@ -12,8 +12,8 @@ interface LayoutProps {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
     addItem: (product: any) => void;
-    removeItem: (productId: number) => void;
-    updateQuantity: (productId: number, quantity: number) => void;
+    removeItem: (productId: string) => void;
+    updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
     getTotal: () => number;
     getItemsCount: () => number;
