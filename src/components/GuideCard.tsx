@@ -35,10 +35,6 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
           {guide.name}
         </h3>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {guide.description}
-        </p>
-
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <span className="text-2xl font-bold text-[#970048]">

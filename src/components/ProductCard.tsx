@@ -32,7 +32,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
 
       <div className="p-3 md:p-4 lg:p-6" onClick={() => onViewProduct(product)}>
         <h3 className="text-sm md:text-base lg:text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
-        <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2 hidden md:block">{product.description}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
