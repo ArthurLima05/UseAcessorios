@@ -3,6 +3,8 @@ import { ArrowLeft, CreditCard, Shield, Truck, CheckCircle } from 'lucide-react'
 import { CartItem } from '../types';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { stripeService } from '../services/stripe';
+import InputMask from 'react-input-mask';
+
 
 interface CheckoutProps {
   items: CartItem[];
@@ -38,7 +40,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
   // Calcular valor das parcelas
   const calculateInstallmentValue = (totalValue: number, installmentCount: number) => {
     if (installmentCount === 1) return totalValue;
-    
+
     // Aplicar juros: 4% por parcela adicional
     const interestRate = (installmentCount - 1) * 0.04;
     const totalWithInterest = totalValue * (1 + interestRate);
@@ -49,10 +51,10 @@ export const Checkout: React.FC<CheckoutProps> = ({
     if (installmentCount === 1) {
       return `À vista - R$ ${(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
     }
-    
+
     const installmentValue = calculateInstallmentValue(total, installmentCount);
     const totalWithInterest = installmentValue * installmentCount;
-    
+
     return `${installmentCount}x de R$ ${(installmentValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (Total: R$ ${(totalWithInterest / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })})`;
   };
 
@@ -240,14 +242,21 @@ export const Checkout: React.FC<CheckoutProps> = ({
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Telefone *
                     </label>
-                    <input
-                      type="tel"
+                    <InputMask
+                      mask="(99) 99999-9999"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
-                      placeholder="(11) 99999-9999"
-                      required
-                    />
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
+                    >
+                      {(inputProps: any) => (
+                        <input
+                          {...inputProps}
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
+                          placeholder="(81) 98532-5423"
+                          required
+                        />
+                      )}
+                    </InputMask>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -408,7 +417,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                 <div className="flex justify-between text-lg font-semibold text-[#970048] border-t pt-2">
                   <span>Total</span>
                   <span>
-                    {installments === 1 
+                    {installments === 1
                       ? `R$ ${(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                       : `${installments}x de R$ ${(calculateInstallmentValue(finalTotal, installments) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                     }

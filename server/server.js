@@ -188,10 +188,21 @@ app.post('/api/create-payment-intent',
         automatic_payment_methods: {
           enabled: true,
         },
+        shipping: {
+          name: customerInfo.name,
+          phone: customerInfo.phone,
+          address: {
+            line1: customerInfo.address,
+            city: customerInfo.city,
+            postal_code: customerInfo.zipCode, // <-- Aqui vai o CEP brasileiro
+            country: 'BR',
+          }
+        },
         metadata: {
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
           customerPhone: customerInfo.phone,
+          customerZipCode: customerInfo.zipCode, // você pode manter no metadata também
           itemsCount: validatedItems.length.toString(),
           subtotal: subtotal.toString(),
           shipping: shipping.toString(),
@@ -199,6 +210,7 @@ app.post('/api/create-payment-intent',
           timestamp: new Date().toISOString()
         }
       });
+
 
       // 5. CRIAR PEDIDO PENDENTE NO FIREBASE
       const orderData = {
@@ -246,6 +258,7 @@ app.post('/api/create-payment-intent',
         console.log(`[SECURITY] Tentativa suspeita de ${req.ip}: ${error.message}`);
       }
 
+      console.log('[DEBUG] Respondendo com erro:', error.message);
       res.status(400).json({
         error: error.message || 'Erro ao processar pagamento',
         code: 'PAYMENT_ERROR'

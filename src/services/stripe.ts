@@ -1,5 +1,6 @@
 import { loadStripe } from '@stripe/stripe-js';
 
+
 // Inicializar Stripe
 export const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -18,7 +19,8 @@ export const stripeService = {
     };
   }) {
     try {
-      const response = await fetch('/api/create-payment-intent', {
+      console.log('Enviando orderData:', orderData);
+      const response = await fetch('http://localhost:4242/api/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
