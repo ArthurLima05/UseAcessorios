@@ -2,7 +2,7 @@ import { Guide } from '../types';
 
 export const guides: Guide[] = [
   {
-    id: 1,
+    id: '1',
     name: "Nunca Mais Erre na Escolha: o guia definitivo de joias para cada ocasião",
     price: 14.89,
     originalPrice: 29.90,

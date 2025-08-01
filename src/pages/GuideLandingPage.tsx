@@ -146,9 +146,9 @@ export const GuideLandingPage: React.FC = () => {
             </div>
           </div>
           <div className="text-center">
-            <button 
+            <button
               onClick={handlePurchase}
-              className="bg-[#970048] text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse"
+              className="bg-[#970048] text-white px-14 py-5 rounded-full text-3xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
               JÁ ESTOU DECIDIDA
             </button>
@@ -185,8 +185,8 @@ export const GuideLandingPage: React.FC = () => {
           </div>
 
           <div className="max-w-2xl mx-auto">
-            <img 
-              src="https://images.pexels.com/photos/1335751/pexels-photo-1335751.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            <img
+              src="https://images.pexels.com/photos/1335751/pexels-photo-1335751.jpeg?auto=compress&cs=tinysrgb&w=800"
               alt="Mulher escolhendo joias"
               className="w-full h-80 object-cover rounded-2xl"
             />
@@ -212,8 +212,8 @@ export const GuideLandingPage: React.FC = () => {
                 "{testimonials[currentTestimonial].text}"
               </p>
               <div className="flex items-center justify-center space-x-4">
-                <img 
-                  src={testimonials[currentTestimonial].image} 
+                <img
+                  src={testimonials[currentTestimonial].image}
                   alt={testimonials[currentTestimonial].author}
                   className="w-16 h-16 rounded-full object-cover border-4 border-[#970048]"
                 />
@@ -225,13 +225,13 @@ export const GuideLandingPage: React.FC = () => {
             </div>
 
             <div className="flex justify-center space-x-4 mt-6">
-              <button 
+              <button
                 onClick={() => setCurrentTestimonial(prev => prev > 0 ? prev - 1 : testimonials.length - 1)}
                 className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors"
               >
                 <ChevronLeft size={20} />
               </button>
-              <button 
+              <button
                 onClick={() => setCurrentTestimonial(prev => (prev + 1) % testimonials.length)}
                 className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors"
               >
@@ -244,9 +244,8 @@ export const GuideLandingPage: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentTestimonial ? 'bg-[#970048]' : 'bg-gray-300'
-                  }`}
+                  className={`w-3 h-3 rounded-full transition-colors ${index === currentTestimonial ? 'bg-[#970048]' : 'bg-gray-300'
+                    }`}
                 />
               ))}
             </div>
@@ -285,7 +284,7 @@ export const GuideLandingPage: React.FC = () => {
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={handlePurchase}
                 className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
               >
@@ -295,8 +294,8 @@ export const GuideLandingPage: React.FC = () => {
 
             <div className="flex justify-center">
               <div className="max-w-sm">
-                <img 
-                  src="/capa-ebook.png" 
+                <img
+                  src="/capa-ebook.png"
                   alt="Capa do Ebook"
                   className="w-full rounded-2xl shadow-2xl"
                 />
@@ -318,21 +317,21 @@ export const GuideLandingPage: React.FC = () => {
 
           <div className="relative max-w-md mx-auto">
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <img 
-                src={demoSlides[currentDemo]} 
+              <img
+                src={demoSlides[currentDemo]}
                 alt={`Página de demonstração ${currentDemo + 1}`}
                 className="w-full h-96 object-cover"
               />
             </div>
 
             <div className="flex justify-center space-x-4 mt-6">
-              <button 
+              <button
                 onClick={() => setCurrentDemo(prev => prev > 0 ? prev - 1 : demoSlides.length - 1)}
                 className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors"
               >
                 <ChevronLeft size={20} />
               </button>
-              <button 
+              <button
                 onClick={() => setCurrentDemo(prev => (prev + 1) % demoSlides.length)}
                 className="bg-[#970048] text-white p-3 rounded-full hover:bg-[#7a0039] transition-colors"
               >
@@ -345,16 +344,15 @@ export const GuideLandingPage: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentDemo(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentDemo ? 'bg-[#970048]' : 'bg-gray-300'
-                  }`}
+                  className={`w-3 h-3 rounded-full transition-colors ${index === currentDemo ? 'bg-[#970048]' : 'bg-gray-300'
+                    }`}
                 />
               ))}
             </div>
           </div>
 
           <div className="text-center mt-8">
-            <button 
+            <button
               onClick={handlePurchase}
               className="bg-[#970048] text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
@@ -408,7 +406,7 @@ export const GuideLandingPage: React.FC = () => {
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={handlePurchase}
                 className="bg-[#970048] text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-[#7a0039] transition-colors"
               >
@@ -417,8 +415,8 @@ export const GuideLandingPage: React.FC = () => {
             </div>
 
             <div className="flex justify-center">
-              <img 
-                src="/logoUseAcessorios.png" 
+              <img
+                src="/logoUseAcessorios.png"
                 alt="Logo Use Acessórios"
                 className="max-w-sm rounded-2xl shadow-lg"
               />
@@ -461,7 +459,7 @@ export const GuideLandingPage: React.FC = () => {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={handlePurchase}
             className="bg-[#970048] text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
           >
@@ -490,8 +488,8 @@ export const GuideLandingPage: React.FC = () => {
                   className="w-full flex items-center justify-between py-6 text-left hover:text-[#970048] transition-colors"
                 >
                   <span className="font-semibold text-lg">{faq.question}</span>
-                  <Plus 
-                    size={20} 
+                  <Plus
+                    size={20}
                     className={`transform transition-transform ${activeFaq === index ? 'rotate-45' : ''}`}
                   />
                 </button>
@@ -505,20 +503,6 @@ export const GuideLandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-black text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <p>&copy; 2024 Guia Definitivo de Joias. Todos os direitos reservados.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-[#970048] transition-colors">Política de Privacidade</a>
-              <a href="#" className="hover:text-[#970048] transition-colors">Termos de Uso</a>
-              <a href="#" className="hover:text-[#970048] transition-colors">Contato</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -63,9 +63,9 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
             className="w-full bg-gray-100 text-[#970048] py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 mb-2"
           >
             <Eye size={18} />
-            <span>Saiba Mais</span>
+            <button>Saiba Mais</button>
           </button>
-          
+
           <button
             onClick={() => onPurchase(guide)}
             className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors flex items-center justify-center space-x-2"
