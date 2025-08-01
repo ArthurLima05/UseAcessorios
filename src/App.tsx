@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { GuidesPage } from './pages/GuidesPage';
+import { GuideLandingPage } from './pages/GuideLandingPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { useCart } from './hooks/useCart';
 import { useNotification } from './hooks/useNotification';
@@ -99,6 +100,10 @@ const AppContent: React.FC = () => {
             element={
               <GuidesPage onPurchaseGuide={handlePurchaseGuide} />
             } 
+          />
+          <Route 
+            path="/guide/nunca-mais-erre-na-escolha" 
+            element={<GuideLandingPage />} 
           />
           <Route 
             path="/checkout" 

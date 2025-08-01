@@ -1,6 +1,7 @@
 import React from 'react';
-import { Download, Star } from 'lucide-react';
+import { Download, Star, Eye } from 'lucide-react';
 import { Guide } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 interface GuideCardProps {
   guide: Guide;
@@ -8,6 +9,14 @@ interface GuideCardProps {
 }
 
 export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
+  const navigate = useNavigate();
+
+  const handleSaibaMais = () => {
+    if (guide.id === '1') {
+      navigate('/guide/nunca-mais-erre-na-escolha');
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-lg transition-shadow duration-300">
       <div className="relative overflow-hidden">
@@ -49,6 +58,14 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
         </div>
 
         <div className="space-y-2">
+          <button
+            onClick={handleSaibaMais}
+            className="w-full bg-gray-100 text-[#970048] py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 mb-2"
+          >
+            <Eye size={18} />
+            <span>Saiba Mais</span>
+          </button>
+          
           <button
             onClick={() => onPurchase(guide)}
             className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors flex items-center justify-center space-x-2"
