@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Play, CheckCircle, Star, Gift, Shield, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle, Star, Gift, Shield, Plus, ChevronLeft, ChevronRight, DollarSign, HelpCircle, Puzzle, Briefcase, Heart, PartyPopper, Coffee, Plane } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const GuideLandingPage: React.FC = () => {
@@ -71,11 +71,11 @@ export const GuideLandingPage: React.FC = () => {
   ];
 
   const chapters = [
-    { icon: '💼', title: 'Profissional', description: 'Joias elegantes e discretas para o ambiente corporativo e reuniões importantes' },
-    { icon: '💕', title: 'Encontros', description: 'Combinações românticas e sofisticadas para conquistar em qualquer encontro' },
-    { icon: '🥂', title: 'Festas e Eventos', description: 'Brilhe em casamentos, formaturas e eventos especiais com as joias certas' },
-    { icon: '☕', title: 'Dia a Dia', description: 'Peças versáteis e confortáveis para o cotidiano sem perder o estilo' },
-    { icon: '🏖️', title: 'Praia e Viagem', description: 'Joias práticas e estilosas para suas aventuras e momentos de lazer' }
+    { icon: <Briefcase size={24} className="text-white" />, title: 'Profissional', description: 'Joias elegantes e discretas para o ambiente corporativo e reuniões importantes' },
+    { icon: <Heart size={24} className="text-white" />, title: 'Encontros', description: 'Combinações românticas e sofisticadas para conquistar em qualquer encontro' },
+    { icon: <PartyPopper size={24} className="text-white" />, title: 'Festas e Eventos', description: 'Brilhe em casamentos, formaturas e eventos especiais com as joias certas' },
+    { icon: <Coffee size={24} className="text-white" />, title: 'Dia a Dia', description: 'Peças versáteis e confortáveis para o cotidiano sem perder o estilo' },
+    { icon: <Plane size={24} className="text-white" />, title: 'Praia e Viagem', description: 'Joias práticas e estilosas para suas aventuras e momentos de lazer' }
   ];
 
   const faqs = [
@@ -165,20 +165,20 @@ export const GuideLandingPage: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
-              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white">
-                💸
+              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
+                <DollarSign size={24} />
               </div>
               <p className="font-medium">Gasta muito com joias que não usa</p>
             </div>
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
-              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white">
-                ❓
+              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
+                <HelpCircle size={24} />
               </div>
               <p className="font-medium">Nunca sabe o que combina com qual ocasião</p>
             </div>
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
-              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white">
-                🧩
+              <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
+                <Puzzle size={24} />
               </div>
               <p className="font-medium">Sente que falta algo no look, mas não sabe o quê</p>
             </div>
@@ -256,7 +256,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Guide Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048]">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
             O GUIA DEFINITIVO DE JOIAS PARA CADA OCASIÃO
           </h2>
 
@@ -286,7 +286,7 @@ export const GuideLandingPage: React.FC = () => {
 
               <button
                 onClick={handlePurchase}
-                className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                className="bg-black text-white px-12 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors"
               >
                 ADQUIRIR MATERIAL
               </button>
@@ -308,7 +308,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Demo Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#970048]">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#970048] font-serif">
             VEJA COMO É O CONTEÚDO POR DENTRO
           </h2>
           <p className="text-center text-gray-600 mb-12 text-lg">
@@ -354,7 +354,7 @@ export const GuideLandingPage: React.FC = () => {
           <div className="text-center mt-8">
             <button
               onClick={handlePurchase}
-              className="bg-[#970048] text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-[#7a0039] transition-colors"
+              className="bg-[#970048] text-white px-16 py-5 rounded-full text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
               ADQUIRIR MATERIAL
             </button>
@@ -365,14 +365,16 @@ export const GuideLandingPage: React.FC = () => {
       {/* Chapters Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048]">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
             CAPÍTULOS ORGANIZADOS POR OCASIÃO
           </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {chapters.map((chapter, index) => (
               <div key={index} className="bg-white p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow">
-                <div className="text-5xl mb-4">{chapter.icon}</div>
+                <div className="w-16 h-16 bg-gradient-to-r from-[#970048] to-[#b8005a] rounded-full flex items-center justify-center mx-auto mb-4">
+                  {chapter.icon}
+                </div>
                 <h3 className="text-xl font-semibold mb-4 text-[#970048]">{chapter.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{chapter.description}</p>
               </div>
@@ -386,7 +388,7 @@ export const GuideLandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#970048]">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#970048] font-serif">
                 TODAS AS JOIAS PODEM SER ENCONTRADAS NA USE ACESSÓRIOS
               </h2>
               <p className="text-lg mb-8 text-gray-700 leading-relaxed">
@@ -408,7 +410,7 @@ export const GuideLandingPage: React.FC = () => {
 
               <button
                 onClick={handlePurchase}
-                className="bg-[#970048] text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-[#7a0039] transition-colors"
+                className="bg-[#970048] text-white px-12 py-5 rounded-lg text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
               >
                 ADQUIRIR PROMOÇÃO
               </button>
@@ -428,7 +430,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Price Section */}
       <section className="py-16 bg-black text-white">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-yellow-300">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-yellow-300 font-serif">
             OFERTA ESPECIAL POR TEMPO LIMITADO
           </h2>
 
@@ -461,7 +463,7 @@ export const GuideLandingPage: React.FC = () => {
 
           <button
             onClick={handlePurchase}
-            className="bg-[#970048] text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
+            className="bg-[#970048] text-white px-16 py-6 rounded-full text-2xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
           >
             GARANTIR MEU GUIA AGORA
           </button>
@@ -476,7 +478,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* FAQ Section */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048]">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
             PERGUNTAS FREQUENTES
           </h2>
 

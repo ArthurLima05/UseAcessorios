@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Heart, Share2, Star, Shield, Truck, RotateCcw } from 'lucide-react';
 import { Product, CartItem } from '../types';
-import { ShippingCalculator } from './ShippingCalculator';
 
 
 interface ProductDetailProps {
@@ -184,9 +183,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </button>
               </div>
             </div>
-
-            {/* Calculadora de Frete */}
-            <ShippingCalculator />
 
             {/* Benefícios */}
             <div className="bg-white p-6 rounded-xl shadow-sm">

@@ -20,13 +20,11 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-lg transition-shadow duration-300">
       <div className="relative overflow-hidden">
-        <div className="w-full h-80 bg-gradient-to-br from-[#970048] to-[#f8dbe0] flex items-center justify-center">
-          <div className="text-white text-center p-8">
-            <div className="text-6xl mb-4">📖</div>
-            <h3 className="text-xl font-bold mb-2">E-book</h3>
-            <p className="text-sm opacity-90">Guia Digital</p>
-          </div>
-        </div>
+        <img
+          src="/capa-ebook.png"
+          alt={guide.name}
+          className="w-full h-80 object-cover"
+        />
         <div className="absolute top-4 left-4 bg-[#970048] text-white px-3 py-1 rounded-full text-sm font-medium">
           50% OFF
         </div>
