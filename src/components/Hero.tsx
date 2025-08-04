@@ -11,12 +11,12 @@ export const Hero: React.FC = () => {
               <Sparkles className="text-[#970048]" size={24} />
               <span className="text-[#970048] font-medium">Coleção Exclusiva</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
               Acessórios que Contam
               <span className="text-[#970048]"> Sua História</span>
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Descubra nossa coleção exclusiva de acessórios artesanais, criados com os mais finos materiais 
+              Descubra nossa coleção exclusiva de acessórios artesanais, criados com os mais finos materiais
               e técnicas tradicionais para celebrar seus momentos especiais.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -30,8 +30,8 @@ export const Hero: React.FC = () => {
           </div>
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden">
-              <img 
-                src="https://images.pexels.com/photos/1454171/pexels-photo-1454171.jpeg?auto=compress&cs=tinysrgb&w=600" 
+              <img
+                src="https://images.pexels.com/photos/1454171/pexels-photo-1454171.jpeg?auto=compress&cs=tinysrgb&w=600"
                 alt="Joia em destaque"
                 className="w-full h-[400px] object-cover"
               />

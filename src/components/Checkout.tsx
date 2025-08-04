@@ -154,8 +154,8 @@ export const Checkout: React.FC<CheckoutProps> = ({
           {/* Formulário */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Finalizar Compra</h1>
-              <p className="text-gray-600">Complete seus dados para finalizar o pedido</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-2 font-serif">Finalizar Compra</h1>
+              <p className="text-gray-600 text-xl">Complete seus dados para finalizar o pedido</p>
             </div>
 
             {step === 'details' && (
@@ -190,7 +190,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2 ">
                       Telefone *
                     </label>
                     <InputMask
@@ -202,7 +202,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                         <input
                           {...inputProps}
                           type="tel"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048] font-numeric"
                           placeholder="(81) 98532-5423"
                           required
                         />
@@ -217,7 +217,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                       type="text"
                       value={formData.zipCode}
                       onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#970048] focus:border-[#970048] font-numeric"
                       placeholder="00000-000"
                       required
                     />
@@ -264,7 +264,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
             {step === 'payment' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-6">Finalizar Pagamento</h2>
-                
+
                 <p className="text-gray-600 mb-6">
                   Você será redirecionado para o Mercado Pago para finalizar seu pagamento de forma segura.
                 </p>
@@ -327,7 +327,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                 <div className="flex justify-between text-lg font-semibold text-[#970048] border-t pt-2">
                   <span>Total</span>
                   <span className="font-numeric">
-                    R$ ${(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>

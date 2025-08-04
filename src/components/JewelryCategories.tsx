@@ -15,7 +15,7 @@ export const JewelryCategories: React.FC<JewelryCategoriesProps> = ({ onCategory
             Descubra nossa coleção completa de acessórios únicos, cada categoria cuidadosamente curada para você
           </p>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {jewelryCategories.map((category) => (
             <div
@@ -23,7 +23,7 @@ export const JewelryCategories: React.FC<JewelryCategoriesProps> = ({ onCategory
               onClick={() => onCategorySelect(category.id)}
               className="group cursor-pointer"
             >
-              <div className="relative overflow-hidden rounded-2xl bg-gray-100 aspect-square mb-4 group-hover:shadow-lg transition-shadow duration-300">
+              <div className="relative overflow-hidden rounded-2xl  aspect-square mb-4 group-hover:shadow-lg transition-shadow duration-300 font-serif">
                 <img
                   src={category.image}
                   alt={category.name}

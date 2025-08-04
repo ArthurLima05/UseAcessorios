@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "ts-node server/server.ts"
+    "start": "ts-node server/server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

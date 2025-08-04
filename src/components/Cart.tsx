@@ -94,7 +94,7 @@ export const Cart: React.FC<CartProps> = ({
               </div>
               <button
                 onClick={onCheckout}
-                className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors"
+                className="w-full bg-[#970048] text-white py-3 rounded-lg font-medium hover:bg-[#7a0039] transition-colors font-serif"
               >
                 Finalizar Compra
               </button>
