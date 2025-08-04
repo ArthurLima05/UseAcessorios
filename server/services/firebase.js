@@ -285,10 +285,10 @@ export const orderService = {
   },
 
   // Buscar pedido por Payment Intent ID
-  async getOrderByPaymentIntent(paymentIntentId) {
+  async getOrderByPreferenceId(preferenceId) {
     try {
       const ordersRef = db.collection('orders');
-      const query = ordersRef.where('paymentIntentId', '==', paymentIntentId);
+      const query = ordersRef.where('preferenceId', '==', preferenceId);
       const querySnapshot = await query.get();
       
       if (!querySnapshot.empty) {
@@ -306,6 +306,27 @@ export const orderService = {
     }
   },
 
+  // Buscar pedido por Reservation ID (para webhook do Mercado Pago)
+  async getOrderByReservationId(reservationId) {
+    try {
+      const ordersRef = db.collection('orders');
+      const query = ordersRef.where('reservationId', '==', reservationId);
+      const querySnapshot = await query.get();
+      
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        return {
+          id: doc.id,
+          ...doc.data()
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Erro ao buscar pedido por reservationId:', error);
+      throw new Error('Erro ao buscar pedido');
+    }
+  },
   // Buscar pedidos por email (para histórico)
   async getOrdersByEmail(email) {
     try {

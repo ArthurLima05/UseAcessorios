@@ -3,14 +3,18 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
-import Stripe from 'stripe';
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 import dotenv from 'dotenv';
 import { productService, orderService } from './services/firebase.js';
 
 dotenv.config();
 
 const app = express();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const client = new MercadoPagoConfig({ 
+  accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
+  options: { timeout: 5000 }
+});
+const preference = new Preference(client);
 
 // Middleware de segurança
 app.use(helmet({
@@ -153,8 +157,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Endpoint para criar Payment Intent - ULTRA SEGURO
-app.post('/api/create-payment-intent',
+// Endpoint para criar Preferência do Mercado Pago - ULTRA SEGURO
+app.post('/api/create-preference',
   paymentLimiter,
   validatePaymentIntent,
   handleValidationErrors,
@@ -163,7 +167,7 @@ app.post('/api/create-payment-intent',
     try {
       const { items, customerInfo } = req.body;
 
-      console.log(`[PAYMENT] Iniciando pagamento para: ${customerInfo.email}`);
+      console.log(`[MERCADO_PAGO] Iniciando pagamento para: ${customerInfo.email}`);
       console.log(`[PAYMENT] Items recebidos:`, items.map(i => `${i.productId}:${i.quantity}`));
 
       // 1. VALIDAR PRODUTOS NO FIREBASE (PREÇOS REAIS)
@@ -179,37 +183,39 @@ app.post('/api/create-payment-intent',
       const shipping = 0; // Frete será calculado externamente
       const total = subtotal + shipping;
 
-      console.log(`[PAYMENT] Valores calculados - Subtotal: R$${subtotal / 100}, Total: R$${total / 100}`);
+      console.log(`[MERCADO_PAGO] Valores calculados - Subtotal: R$${subtotal / 100}, Total: R$${total / 100}`);
 
-      // 4. CRIAR PAYMENT INTENT NO STRIPE
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: total,
-        currency: 'brl',
-        automatic_payment_methods: {
-          enabled: true,
-        },
-        shipping: {
+      // 4. CRIAR PREFERÊNCIA NO MERCADO PAGO
+      const preferenceData = {
+        items: validatedItems.map(item => ({
+          title: item.productName,
+          unit_price: item.price / 100, // Mercado Pago usa valores em reais
+          quantity: item.quantity,
+          currency_id: 'BRL'
+        })),
+        payer: {
           name: customerInfo.name,
-          phone: customerInfo.phone,
+          email: customerInfo.email,
+          phone: {
+            number: customerInfo.phone.replace(/\D/g, '')
+          },
           address: {
-            line1: customerInfo.address,
-            city: customerInfo.city,
-            postal_code: customerInfo.zipCode, // <-- Aqui vai o CEP brasileiro
-            country: 'BR',
+            street_name: customerInfo.address,
+            city_name: customerInfo.city,
+            zip_code: customerInfo.zipCode.replace(/\D/g, '')
           }
         },
-        metadata: {
-          customerEmail: customerInfo.email,
-          customerName: customerInfo.name,
-          customerPhone: customerInfo.phone,
-          customerZipCode: customerInfo.zipCode, // você pode manter no metadata também
-          itemsCount: validatedItems.length.toString(),
-          subtotal: subtotal.toString(),
-          shipping: shipping.toString(),
-          reservationId: reservationId,
-          timestamp: new Date().toISOString()
-        }
-      });
+        back_urls: {
+          success: `${process.env.FRONTEND_URL}/payment/success`,
+          failure: `${process.env.FRONTEND_URL}/payment/failure`,
+          pending: `${process.env.FRONTEND_URL}/payment/pending`
+        },
+        auto_return: 'approved',
+        external_reference: reservationId,
+        notification_url: `${process.env.BACKEND_URL || 'http://localhost:4242'}/api/webhook`
+      };
+
+      const mpPreference = await preference.create({ body: preferenceData });
 
 
       // 5. CRIAR PEDIDO PENDENTE NO FIREBASE
@@ -225,17 +231,19 @@ app.post('/api/create-payment-intent',
         shipping,
         total,
         status: 'pending',
-        paymentIntentId: paymentIntent.id,
+        preferenceId: mpPreference.id,
         reservationId: reservationId,
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
       const orderId = await orderService.createOrder(orderData);
-      console.log(`[PAYMENT] Pedido criado: ${orderId}`);
+      console.log(`[MERCADO_PAGO] Pedido criado: ${orderId}`);
 
       res.json({
-        clientSecret: paymentIntent.client_secret,
+        init_point: mpPreference.init_point,
+        sandbox_init_point: mpPreference.sandbox_init_point,
+        id: mpPreference.id,
         orderId,
         amount: total,
         items: validatedItems.map(item => ({
@@ -267,68 +275,55 @@ app.post('/api/create-payment-intent',
   }
 );
 
-// Webhook do Stripe - ULTRA SEGURO
+// Webhook do Mercado Pago - ULTRA SEGURO
 app.post('/api/webhook', async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-
   try {
-    // Verificar assinatura do Stripe
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error(`[WEBHOOK] Assinatura inválida: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  try {
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
-        console.log(`[WEBHOOK] 💰 Pagamento confirmado: ${paymentIntent.id}`);
-
-        // Buscar pedido pelo Payment Intent ID
-        const order = await orderService.getOrderByPaymentIntent(paymentIntent.id);
-
-        if (order) {
-          // 1. Atualizar status do pedido
-          await orderService.updateOrderStatus(order.id, 'paid');
-
-          // 2. Confirmar redução de estoque
-          await productService.confirmStockReduction(order.reservationId);
-
-          console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
-          console.log(`[WEBHOOK] 📦 Cliente: ${order.customerEmail}`);
-          console.log(`[WEBHOOK] 💵 Valor: R$${order.total / 100}`);
-
-        } else {
-          console.error(`[WEBHOOK] ❌ Pedido não encontrado para Payment Intent: ${paymentIntent.id}`);
+    const { type, data } = req.body;
+    
+    console.log(`[WEBHOOK] Recebido evento: ${type}`);
+    
+    if (type === 'payment') {
+      const paymentId = data.id;
+      
+      // Buscar informações do pagamento no Mercado Pago
+      const paymentResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        headers: {
+          'Authorization': `Bearer ${process.env.MERCADO_PAGO_ACCESS_TOKEN}`
         }
-
-        break;
-
-      case 'payment_intent.payment_failed':
-        const failedPayment = event.data.object;
-        console.log(`[WEBHOOK] ❌ Pagamento falhou: ${failedPayment.id}`);
-
-        // Buscar e cancelar pedido
-        const failedOrder = await orderService.getOrderByPaymentIntent(failedPayment.id);
-        if (failedOrder) {
-          await orderService.updateOrderStatus(failedOrder.id, 'cancelled');
-
-          // Liberar estoque reservado
-          await productService.releaseReservedStock(failedOrder.reservationId);
-
-          console.log(`[WEBHOOK] 🔄 Estoque liberado para pedido: ${failedOrder.id}`);
+      });
+      
+      const payment = await paymentResponse.json();
+      console.log(`[WEBHOOK] Status do pagamento: ${payment.status}`);
+      
+      // Buscar pedido pela referência externa (reservationId)
+      const order = await orderService.getOrderByReservationId(payment.external_reference);
+      
+      if (order) {
+        switch (payment.status) {
+          case 'approved':
+            console.log(`[WEBHOOK] 💰 Pagamento aprovado: ${paymentId}`);
+            await orderService.updateOrderStatus(order.id, 'paid');
+            await productService.confirmStockReduction(order.reservationId);
+            console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
+            break;
+            
+          case 'rejected':
+          case 'cancelled':
+            console.log(`[WEBHOOK] ❌ Pagamento rejeitado/cancelado: ${paymentId}`);
+            await orderService.updateOrderStatus(order.id, 'cancelled');
+            await productService.releaseReservedStock(order.reservationId);
+            console.log(`[WEBHOOK] 🔄 Estoque liberado para pedido: ${order.id}`);
+            break;
+            
+          case 'pending':
+          case 'in_process':
+            console.log(`[WEBHOOK] ⏳ Pagamento pendente: ${paymentId}`);
+            await orderService.updateOrderStatus(order.id, 'pending');
+            break;
         }
-
-        break;
-
-      default:
-        console.log(`[WEBHOOK] Evento não tratado: ${event.type}`);
+      } else {
+        console.error(`[WEBHOOK] ❌ Pedido não encontrado para referência: ${payment.external_reference}`);
+      }
     }
 
     res.json({ received: true });
@@ -369,7 +364,7 @@ const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => {
   console.log(`🔒 Servidor ULTRA SEGURO rodando na porta ${PORT}`);
   console.log(`🔥 Firebase Admin conectado`);
-  console.log(`💳 Stripe configurado`);
+  console.log(`💳 Mercado Pago configurado`);
   console.log(`🛡️ Middlewares de segurança ativados`);
   console.log(`📊 Rate limiting configurado`);
   console.log(`🚫 Rotas sensíveis bloqueadas`);
