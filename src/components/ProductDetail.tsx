@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Heart, Share2, Star, Shield, Truck, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Share2, Star, Shield, Truck, RotateCcw } from 'lucide-react';
 import { Product, CartItem } from '../types';
 
 
@@ -65,9 +65,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   Destaque
                 </div>
               )}
-              <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:bg-[#f8dbe0] transition-colors">
-                <Heart size={20} className="text-[#970048]" />
-              </button>
             </div>
 
             <div className="flex space-x-3 overflow-x-auto">
@@ -103,11 +100,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
               <div className="flex items-center space-x-4 mb-6">
-                <span className="text-3xl font-bold text-[#970048]">
+                <span className="text-3xl font-numeric font-bold text-[#970048]">
                   R$ {(product.price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-xl text-gray-500 line-through">
+                  <span className="text-xl font-numeric text-gray-500 line-through">
                     R$ {(product.originalPrice / 100).toLocaleString('pt-BR')}
                   </span>
                 )}
@@ -115,13 +112,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Descrição</h3>
+              <h3 className="text-xl font-serif font-semibold text-gray-900 mb-3">Descrição</h3>
               <p className="text-gray-600 leading-relaxed">{product.description}</p>
             </div>
 
             {/* Especificações */}
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Especificações</h3>
+              <h3 className="text-xl font-serif font-semibold text-gray-900 mb-4">Especificações</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-600">Material:</span>
@@ -149,7 +146,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
+                  <span className="px-4 py-2 font-numeric border-x border-gray-300">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="px-3 py-2 hover:bg-gray-100 transition-colors"
@@ -158,7 +155,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   </button>
                 </div>
                 {product.quantity && (
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm font-numeric text-gray-600">
                     {product.quantity} disponíveis
                   </span>
                 )}
@@ -230,7 +227,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
         {/* Produtos Relacionados */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Produtos Relacionados</h2>
+          <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Produtos Relacionados</h2>
           <div className="text-center py-12 text-gray-500">
             <p>Outros produtos da mesma categoria aparecerão aqui</p>
           </div>

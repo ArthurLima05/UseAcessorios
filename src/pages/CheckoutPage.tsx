@@ -1,7 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Elements } from '@stripe/react-stripe-js';
-import { stripePromise } from '../services/stripe';
 import { Checkout } from '../components/Checkout';
 import { CartItem } from '../types';
 
@@ -43,14 +41,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   };
 
   return (
-    <Elements stripe={stripePromise}>
-      <Checkout
-        items={items}
-        total={total}
-        onBack={handleBack}
-        onOrderComplete={handleOrderComplete}
-        showNotification={showNotification}
-      />
-    </Elements>
+    <Checkout
+      items={items}
+      total={total}
+      onBack={handleBack}
+      onOrderComplete={handleOrderComplete}
+      showNotification={showNotification}
+    />
   );
 };

@@ -44,11 +44,11 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-[#970048]">
+            <span className="text-2xl font-numeric font-bold text-[#970048]">
               R$ {guide.price.toFixed(2).replace('.', ',')}
             </span>
             {guide.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm font-numeric text-gray-500 line-through">
                 R$ {(guide.originalPrice / 100).toFixed(2).replace('.', ',')}
               </span>
             )}

@@ -19,7 +19,7 @@ export const GuidesSection: React.FC<GuidesSectionProps> = ({ onPurchaseGuide })
               <BookOpen size={32} />
               <span className="text-xl font-medium">Guias Exclusivos</span>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
+            <h1 class="text-5xl lg:text-6xl font-serif font-bold mb-6">
               Guias de Tendência
             </h1>
             <p className="text-xl opacity-90 max-w-3xl mx-auto">
@@ -63,7 +63,7 @@ export const GuidesSection: React.FC<GuidesSectionProps> = ({ onPurchaseGuide })
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Nossos Guias</h2>
+            <h2 class="text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4">Guias</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Transforme sua forma de escolher joias com nossos guias especializados. 
               Cada guia é cuidadosamente elaborado para te dar confiança em suas escolhas.
@@ -85,7 +85,7 @@ export const GuidesSection: React.FC<GuidesSectionProps> = ({ onPurchaseGuide })
       {/* CTA Section */}
       <section className="py-16 bg-[#f8dbe0]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">
             Pronta para se tornar uma especialista em joias?
           </h2>
           <p className="text-lg text-gray-700 mb-8">

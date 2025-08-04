@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { Product } from '../types';
 
 interface ProductCardProps {
@@ -18,11 +18,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
           className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
           onClick={() => onViewProduct(product)}
         />
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="bg-white p-1.5 rounded-full shadow-md hover:bg-[#f8dbe0] transition-colors">
-            <Heart size={16} className="text-[#970048]" />
-          </button>
-        </div>
         {product.featured && (
           <div className="absolute top-2 left-2 bg-[#970048] text-white px-2 py-1 rounded-full text-xs font-medium">
             Destaque
@@ -35,11 +30,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
-            <span className="text-lg md:text-xl lg:text-2xl font-bold text-[#970048]">
+            <span className="text-lg md:text-xl lg:text-2xl font-numeric font-bold text-[#970048]">
               R$ {(product.price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </span>
             {product.originalPrice && (
-              <span className="text-xs md:text-sm text-gray-500 line-through">
+              <span className="text-xs md:text-sm font-numeric text-gray-500 line-through">
                 R$ {(product.originalPrice / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
             )}

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CreditCard, Shield, Truck, CheckCircle } from 'lucide-react';
 import { CartItem } from '../types';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { stripeService } from '../services/stripe';
+import { mercadoPagoService } from '../services/mercadopago';
 import InputMask from 'react-input-mask';
 
 
@@ -24,7 +23,6 @@ export const Checkout: React.FC<CheckoutProps> = ({
   const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
   const [loading, setLoading] = useState(false);
   const [orderData, setOrderData] = useState<any>(null);
-  const [installments, setInstallments] = useState(1);
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -33,30 +31,6 @@ export const Checkout: React.FC<CheckoutProps> = ({
     city: '',
     zipCode: ''
   });
-
-  const stripe = useStripe();
-  const elements = useElements();
-
-  // Calcular valor das parcelas
-  const calculateInstallmentValue = (totalValue: number, installmentCount: number) => {
-    if (installmentCount === 1) return totalValue;
-
-    // Aplicar juros: 4% por parcela adicional
-    const interestRate = (installmentCount - 1) * 0.04;
-    const totalWithInterest = totalValue * (1 + interestRate);
-    return totalWithInterest / installmentCount;
-  };
-
-  const getInstallmentText = (installmentCount: number) => {
-    if (installmentCount === 1) {
-      return `À vista - R$ ${(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-    }
-
-    const installmentValue = calculateInstallmentValue(total, installmentCount);
-    const totalWithInterest = installmentValue * installmentCount;
-
-    return `${installmentCount}x de R$ ${(installmentValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (Total: R$ ${(totalWithInterest / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })})`;
-  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -74,11 +48,6 @@ export const Checkout: React.FC<CheckoutProps> = ({
   };
 
   const handleConfirmOrder = async () => {
-    if (!stripe || !elements) {
-      showNotification('Erro ao carregar sistema de pagamento', 'error');
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -88,32 +57,14 @@ export const Checkout: React.FC<CheckoutProps> = ({
         quantity: item.quantity
       }));
 
-      // Criar payment intent no backend seguro
-      const paymentData = await stripeService.createPaymentIntent({
+      // Criar preferência de pagamento no Mercado Pago
+      const paymentData = await mercadoPagoService.createPreference({
         items: orderItems,
         customerInfo: formData
       });
 
-      // Confirmar pagamento com cartão
-      const paymentIntent = await stripeService.confirmPayment(
-        stripe,
-        elements,
-        paymentData.clientSecret,
-        formData
-      );
-
-      if (paymentIntent.status === 'succeeded') {
-        setOrderData({
-          orderId: paymentData.orderId,
-          paymentIntentId: paymentIntent.id,
-          items: paymentData.items,
-          subtotal: paymentData.subtotal,
-          shipping: 0, // Frete será calculado externamente
-          total: paymentData.amount / 100 // Converter de centavos para reais
-        });
-        setStep('confirmation');
-        showNotification('Pagamento processado com sucesso!', 'success');
-      }
+      // Redirecionar para o checkout do Mercado Pago
+      window.location.href = paymentData.init_point;
 
     } catch (error) {
       console.error('Erro no checkout:', error);
@@ -209,7 +160,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
 
             {step === 'details' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados Pessoais</h2>
+                <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-6">Dados Pessoais</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -312,51 +263,11 @@ export const Checkout: React.FC<CheckoutProps> = ({
 
             {step === 'payment' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Dados do Cartão</h2>
-
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Forma de Pagamento
-                  </label>
-                  <div className="space-y-2">
-                    {[1, 2, 3, 4, 5].map(count => (
-                      <label key={count} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="installments"
-                          value={count}
-                          checked={installments === count}
-                          onChange={(e) => setInstallments(parseInt(e.target.value))}
-                          className="text-[#970048] focus:ring-[#970048]"
-                        />
-                        <span className="text-sm font-medium text-gray-900">
-                          {getInstallmentText(count)}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Informações do Cartão
-                  </label>
-                  <div className="w-full px-3 py-3 border border-gray-300 rounded-lg focus-within:ring-[#970048] focus-within:border-[#970048]">
-                    <CardElement
-                      options={{
-                        style: {
-                          base: {
-                            fontSize: '16px',
-                            color: '#374151',
-                            '::placeholder': {
-                              color: '#9CA3AF',
-                            },
-                          },
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
+                <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-6">Finalizar Pagamento</h2>
+                
+                <p className="text-gray-600 mb-6">
+                  Você será redirecionado para o Mercado Pago para finalizar seu pagamento de forma segura.
+                </p>
 
                 <button
                   onClick={handleConfirmOrder}
@@ -370,8 +281,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                     </>
                   ) : (
                     <>
-                      <CreditCard size={20} />
-                      <span>Finalizar Pedido</span>
+                      <span>Ir para Pagamento</span>
                     </>
                   )}
                 </button>
@@ -382,7 +292,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
           {/* Resumo do Pedido */}
           <div className="lg:sticky lg:top-8">
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Resumo do Pedido</h2>
+              <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-6">Resumo do Pedido</h2>
 
               <div className="space-y-4 mb-6">
                 {items.map(item => (
@@ -397,7 +307,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
                       <p className="text-sm text-gray-600">Quantidade: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-[#970048]">
+                      <p className="font-numeric font-semibold text-[#970048]">
                         R$ {((item.product.price / 100) * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </p>
                     </div>
@@ -408,19 +318,16 @@ export const Checkout: React.FC<CheckoutProps> = ({
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>R$ {(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span className="font-numeric">R$ {(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Frete</span>
-                  <span>{shipping === 0 ? 'Grátis' : `R$ ${(shipping / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}</span>
+                  <span className="font-numeric">{shipping === 0 ? 'Grátis' : `R$ ${(shipping / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}</span>
                 </div>
                 <div className="flex justify-between text-lg font-semibold text-[#970048] border-t pt-2">
                   <span>Total</span>
-                  <span>
-                    {installments === 1
-                      ? `R$ ${(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                      : `${installments}x de R$ ${(calculateInstallmentValue(finalTotal, installments) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                    }
+                  <span className="font-numeric">
+                    R$ ${(finalTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>

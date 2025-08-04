@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingBag, Heart } from 'lucide-react';
+import { Search, ShoppingBag } from 'lucide-react';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -49,9 +49,6 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center space-x-4">
             <button className="text-gray-700 hover:text-[#970048] transition-colors">
               <Search size={20} />
-            </button>
-            <button className="text-gray-700 hover:text-[#970048] transition-colors group">
-              <Heart size={20} />
             </button>
 
             <button

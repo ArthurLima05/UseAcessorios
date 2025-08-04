@@ -29,8 +29,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nossos {categoryName}</h2>
-            <p className="text-gray-600">Peças selecionadas especialmente para você</p>
+            <h2 className="text-3xl lg:text-4xl font-serif font-bold text-gray-900 mb-2">{categoryName}</h2>
           </div>
           <button
             onClick={() => onViewAll(categoryId)}

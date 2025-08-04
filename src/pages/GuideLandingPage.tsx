@@ -444,12 +444,12 @@ export const GuideLandingPage: React.FC = () => {
           <div className="mb-8">
             <div className="mb-4">
               <span className="block text-lg mb-2">Valor normal:</span>
-              <span className="text-2xl line-through text-gray-400">R$ 197</span>
+              <span className="text-2xl font-numeric line-through text-gray-400">R$ 197</span>
             </div>
             <div>
               <span className="block text-lg mb-2">Hoje por apenas:</span>
-              <span className="text-5xl font-bold text-yellow-300 block">R$ 27</span>
-              <span className="text-gray-300">ou 3x de R$ 9,00</span>
+              <span className="text-5xl font-numeric font-bold text-yellow-300 block">R$ 27</span>
+              <span className="text-gray-300 font-numeric">ou 3x de R$ 9,00</span>
             </div>
           </div>
 
