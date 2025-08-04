@@ -159,7 +159,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Problems Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048]">
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-[#970048] font-serif">
             Você já comprou uma joia linda, mas ela simplesmente não combinou com o seu look?
           </h2>
 
@@ -197,7 +197,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Testimonials Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048]">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
             Elas também se sentiam perdidas... até descobrirem o guia.
           </h2>
 

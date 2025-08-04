@@ -8,11 +8,11 @@ interface HeaderProps {
   showNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ 
-  onCartClick, 
-  cartItemsCount, 
+export const Header: React.FC<HeaderProps> = ({
+  onCartClick,
+  cartItemsCount,
   onGuidesClick,
-  showNotification 
+  showNotification
 }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 pt-4">
@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
+            <a href="/" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Início
             </a>
             <button
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button className="text-gray-700 hover:text-[#970048] transition-colors group">
               <Heart size={20} />
             </button>
-            
+
             <button
               onClick={onCartClick}
               className="relative text-gray-700 hover:text-[#970048] transition-colors"
