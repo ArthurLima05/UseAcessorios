@@ -66,9 +66,9 @@ export const GuideLandingPage: React.FC = () => {
   ];
 
   const demoSlides = [
-    "../../public/encontros_demo.jpg",
-    "../../public/festas_demo.jpg",
-    "../../public/praia_demo.jpg"
+    "/encontros_demo.jpg",
+    "/festas_demo.jpg",
+    "/praia_demo.jpg"
   ];
 
   const chapters = [
@@ -191,7 +191,7 @@ export const GuideLandingPage: React.FC = () => {
 
           <div className="max-w-2xl mx-auto">
             <img
-              src='../../public/imagem_comentarios.png'
+              src='/imagem_comentarios.png'
               alt="Mulher escolhendo joias"
               className="w-full h-200 object-cover object-bottom rounded-2xl"
             />
