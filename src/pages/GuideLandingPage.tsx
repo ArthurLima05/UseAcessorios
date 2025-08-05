@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, CheckCircle, Star, Gift, Shield, Plus, ChevronLeft, ChevronRight, DollarSign, HelpCircle, Puzzle, Briefcase, Heart, PartyPopper, Coffee, Plane } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+
 export const GuideLandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -65,9 +66,9 @@ export const GuideLandingPage: React.FC = () => {
   ];
 
   const demoSlides = [
-    "https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-    "https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-    "https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop"
+    "../../public/encontros_demo.jpg",
+    "../../public/festas_demo.jpg",
+    "../../public/praia_demo.jpg"
   ];
 
   const chapters = [
@@ -81,7 +82,7 @@ export const GuideLandingPage: React.FC = () => {
   const faqs = [
     {
       question: "Como recebo o material após a compra?",
-      answer: "Após a confirmação do pagamento, você receberá por email o link para download do guia em PDF, além do acesso aos bônus."
+      answer: "Após a compra, você receberá um e-mail com o link de acesso à página de membros da Kiwify, onde poderá acessar seu material a qualquer momento."
     },
     {
       question: "O guia funciona para qualquer tipo de joia?",
@@ -137,14 +138,19 @@ export const GuideLandingPage: React.FC = () => {
       {/* Video Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-black rounded-2xl overflow-hidden shadow-2xl mb-8">
-            <div className="aspect-video flex items-center justify-center text-white">
-              <div className="text-center">
-                <Play size={64} className="mx-auto mb-4 opacity-70" />
-                <p className="text-lg">Seu vídeo VSL será inserido aqui</p>
-              </div>
-            </div>
+          <div className="flex justify-center mb-8">
+            <video
+              autoPlay
+              muted
+              controls
+              className="h-[640px] w-auto rounded-2xl shadow-2xl"
+            >
+              <source src="/vsl_ebook.mp4" type="video/mp4" />
+              Seu navegador não suporta vídeos HTML5.
+            </video>
           </div>
+
+
           <div className="text-center">
             <button
               onClick={handlePurchase}
@@ -155,7 +161,6 @@ export const GuideLandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
       {/* Problems Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -186,9 +191,9 @@ export const GuideLandingPage: React.FC = () => {
 
           <div className="max-w-2xl mx-auto">
             <img
-              src="https://images.pexels.com/photos/1335751/pexels-photo-1335751.jpeg?auto=compress&cs=tinysrgb&w=800"
+              src='../../public/imagem_comentarios.png'
               alt="Mulher escolhendo joias"
-              className="w-full h-80 object-cover rounded-2xl"
+              className="w-full h-200 object-cover object-bottom rounded-2xl"
             />
           </div>
         </div>
@@ -320,7 +325,7 @@ export const GuideLandingPage: React.FC = () => {
               <img
                 src={demoSlides[currentDemo]}
                 alt={`Página de demonstração ${currentDemo + 1}`}
-                className="w-full h-96 object-cover"
+                className="w-full max-h-[600px] object-contain"
               />
             </div>
 
