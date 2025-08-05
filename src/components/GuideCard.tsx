@@ -49,7 +49,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({ guide, onPurchase }) => {
             </span>
             {guide.originalPrice && (
               <span className="text-sm font-numeric text-gray-500 line-through">
-                R$ {(guide.originalPrice / 100).toFixed(2).replace('.', ',')}
+                R$ {(guide.originalPrice).toFixed(2).replace('.', ',')}
               </span>
             )}
           </div>
