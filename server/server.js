@@ -10,12 +10,12 @@ import { productService, orderService } from './services/firebase.js';
 dotenv.config();
 
 const app = express();
-const client = new MercadoPagoConfig({ 
+const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
   options: { timeout: 5000 }
 });
 const preference = new Preference(client);
-
+console.log('Token Mercado Pago:', process.env.MERCADO_PAGO_ACCESS_TOKEN);
 // Middleware de segurança
 app.use(helmet({
   contentSecurityPolicy: {
@@ -206,17 +206,16 @@ app.post('/api/create-preference',
           }
         },
         back_urls: {
-          success: `${process.env.FRONTEND_URL}/payment/success`,
-          failure: `${process.env.FRONTEND_URL}/payment/failure`,
-          pending: `${process.env.FRONTEND_URL}/payment/pending`
+          success: `${process.env.BACKEND_URL}/payment/success`,
+          failure: `${process.env.BACKEND_URL}/payment/failure`,
+          pending: `${process.env.BACKEND_URL}/payment/pending`
         },
         auto_return: 'approved',
         external_reference: reservationId,
         notification_url: `${process.env.BACKEND_URL || 'http://localhost:4242'}/api/webhook`
       };
-
+      console.log('[DEBUG] Dados da preferência:', JSON.stringify(preferenceData, null, 2));
       const mpPreference = await preference.create({ body: preferenceData });
-
 
       // 5. CRIAR PEDIDO PENDENTE NO FIREBASE
       const orderData = {
@@ -279,25 +278,25 @@ app.post('/api/create-preference',
 app.post('/api/webhook', async (req, res) => {
   try {
     const { type, data } = req.body;
-    
+
     console.log(`[WEBHOOK] Recebido evento: ${type}`);
-    
+
     if (type === 'payment') {
       const paymentId = data.id;
-      
+
       // Buscar informações do pagamento no Mercado Pago
       const paymentResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: {
           'Authorization': `Bearer ${process.env.MERCADO_PAGO_ACCESS_TOKEN}`
         }
       });
-      
+
       const payment = await paymentResponse.json();
       console.log(`[WEBHOOK] Status do pagamento: ${payment.status}`);
-      
+
       // Buscar pedido pela referência externa (reservationId)
       const order = await orderService.getOrderByReservationId(payment.external_reference);
-      
+
       if (order) {
         switch (payment.status) {
           case 'approved':
@@ -306,7 +305,7 @@ app.post('/api/webhook', async (req, res) => {
             await productService.confirmStockReduction(order.reservationId);
             console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
             break;
-            
+
           case 'rejected':
           case 'cancelled':
             console.log(`[WEBHOOK] ❌ Pagamento rejeitado/cancelado: ${paymentId}`);
@@ -314,7 +313,7 @@ app.post('/api/webhook', async (req, res) => {
             await productService.releaseReservedStock(order.reservationId);
             console.log(`[WEBHOOK] 🔄 Estoque liberado para pedido: ${order.id}`);
             break;
-            
+
           case 'pending':
           case 'in_process':
             console.log(`[WEBHOOK] ⏳ Pagamento pendente: ${paymentId}`);
