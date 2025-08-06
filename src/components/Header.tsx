@@ -38,10 +38,10 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Guias de Tendência
             </button>
-            <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
+            <a href="/about" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Sobre
             </a>
-            <a href="#" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
+            <a href="/contact" className="text-gray-700 hover:text-[#970048] transition-colors font-medium">
               Contato
             </a>
           </nav>

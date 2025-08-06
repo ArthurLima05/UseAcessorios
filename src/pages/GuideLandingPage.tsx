@@ -104,7 +104,7 @@ export const GuideLandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Header com botão voltar */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -120,41 +120,42 @@ export const GuideLandingPage: React.FC = () => {
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-[#970048] to-[#b8005a] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight px-2">
             NUNCA MAIS ERRE NA ESCOLHA DAS SUAS JOIAS:
             <br />
-            <span className="text-yellow-300 block mt-2 text-2xl md:text-3xl font-normal">
+            <span className="text-yellow-300 block mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl font-normal">
               DESCUBRA O GUIA QUE TRANSFORMA QUALQUER LOOK COM ESTRATÉGIA E ESTILO
             </span>
           </h1>
-          <p className="text-lg md:text-xl opacity-95 max-w-4xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl opacity-95 max-w-4xl mx-auto px-4">
             Não é sobre ter mil joias. Não é sobre gastar mais. Não é sobre seguir regras.
             É sobre fazer as escolhas certas — e ser notada por isso.
           </p>
+          </div>
         </div>
       </section>
 
       {/* Video Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-8 px-2">
             <video
               autoPlay
               muted
               controls
-              className="h-[640px] w-auto rounded-2xl shadow-2xl"
+              className="w-full max-w-2xl h-auto rounded-2xl shadow-2xl"
             >
               <source src="/vsl_ebook.mp4" type="video/mp4" />
               Seu navegador não suporta vídeos HTML5.
             </video>
           </div>
 
-
           <div className="text-center">
             <button
               onClick={handlePurchase}
-              className="bg-[#970048] text-white px-14 py-5 rounded-full text-3xl font-semibold hover:bg-[#7a0039] transition-colors"
+              className="bg-[#970048] text-white px-8 sm:px-12 md:px-14 py-4 sm:py-5 rounded-full text-xl sm:text-2xl md:text-3xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
               JÁ ESTOU DECIDIDA
             </button>
@@ -164,36 +165,36 @@ export const GuideLandingPage: React.FC = () => {
       {/* Problems Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 text-[#970048] font-serif px-2">
             Você já comprou uma joia linda, mas ela simplesmente não combinou com o seu look?
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
               <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
                 <DollarSign size={24} />
               </div>
-              <p className="font-medium">Gasta muito com joias que não usa</p>
+              <p className="font-medium text-sm sm:text-base">Gasta muito com joias que não usa</p>
             </div>
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
               <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
                 <HelpCircle size={24} />
               </div>
-              <p className="font-medium">Nunca sabe o que combina com qual ocasião</p>
+              <p className="font-medium text-sm sm:text-base">Nunca sabe o que combina com qual ocasião</p>
             </div>
             <div className="flex items-center space-x-4 bg-gray-50 p-6 rounded-2xl">
               <div className="bg-gradient-to-r from-[#970048] to-[#b8005a] p-4 rounded-full text-white flex items-center justify-center">
                 <Puzzle size={24} />
               </div>
-              <p className="font-medium">Sente que falta algo no look, mas não sabe o quê</p>
+              <p className="font-medium text-sm sm:text-base">Sente que falta algo no look, mas não sabe o quê</p>
             </div>
           </div>
 
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto px-4">
             <img
               src='/imagem_comentarios.png'
               alt="Mulher escolhendo joias"
-              className="w-full h-200 object-cover object-bottom rounded-2xl"
+              className="w-full h-auto object-cover object-bottom rounded-2xl"
             />
           </div>
         </div>
@@ -202,7 +203,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* Testimonials Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif px-2">
             Elas também se sentiam perdidas... até descobrirem o guia.
           </h2>
 
@@ -261,44 +262,46 @@ export const GuideLandingPage: React.FC = () => {
       {/* Guide Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif px-2">
             O GUIA DEFINITIVO DE JOIAS PARA CADA OCASIÃO
           </h2>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
-              <p className="text-lg mb-6 text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg mb-6 text-gray-700 leading-relaxed text-center lg:text-left">
                 Esse guia foi criado para mulheres que querem se sentir confiantes, elegantes e bem-vestidas em qualquer ocasião — sem precisar gastar uma fortuna ou depender de palpites.
               </p>
-              <p className="text-lg mb-8 text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg mb-8 text-gray-700 leading-relaxed text-center lg:text-left">
                 Nele, você vai encontrar orientações claras, dicas práticas e combinações certeiras para acertar nas suas joias todos os dias.
               </p>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
+              <div className="space-y-4 mb-8 text-center lg:text-left">
+                <div className="flex items-center space-x-3 justify-center lg:justify-start">
                   <CheckCircle className="text-[#970048]" size={20} />
                   <span className="font-medium">Combinações para cada ocasião</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 justify-center lg:justify-start">
                   <CheckCircle className="text-[#970048]" size={20} />
                   <span className="font-medium">Dicas de estilo profissional</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 justify-center lg:justify-start">
                   <CheckCircle className="text-[#970048]" size={20} />
                   <span className="font-medium">Estratégias de investimento inteligente</span>
                 </div>
               </div>
 
+              <div className="text-center lg:text-left">
               <button
                 onClick={handlePurchase}
-                className="bg-black text-white px-12 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors"
+                className="bg-black text-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-800 transition-colors"
               >
                 ADQUIRIR MATERIAL
               </button>
+              </div>
             </div>
 
             <div className="flex justify-center">
-              <div className="max-w-sm">
+              <div className="max-w-xs sm:max-w-sm">
                 <img
                   src="/capa-ebook.png"
                   alt="Capa do Ebook"
@@ -313,19 +316,19 @@ export const GuideLandingPage: React.FC = () => {
       {/* Demo Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 text-[#970048] font-serif px-2">
             VEJA COMO É O CONTEÚDO POR DENTRO
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p className="text-center text-gray-600 mb-12 text-base sm:text-lg px-4">
             Páginas reais do guia para você conhecer a qualidade do material
           </p>
 
-          <div className="relative max-w-md mx-auto">
+          <div className="relative max-w-xs sm:max-w-md mx-auto">
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
               <img
                 src={demoSlides[currentDemo]}
                 alt={`Página de demonstração ${currentDemo + 1}`}
-                className="w-full max-h-[600px] object-contain"
+                className="w-full h-auto max-h-[400px] sm:max-h-[600px] object-contain"
               />
             </div>
 
@@ -359,7 +362,7 @@ export const GuideLandingPage: React.FC = () => {
           <div className="text-center mt-8">
             <button
               onClick={handlePurchase}
-              className="bg-[#970048] text-white px-16 py-5 rounded-full text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
+              className="bg-[#970048] text-white px-8 sm:px-12 md:px-16 py-4 sm:py-5 rounded-full text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
               ADQUIRIR MATERIAL
             </button>
@@ -370,18 +373,18 @@ export const GuideLandingPage: React.FC = () => {
       {/* Chapters Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif px-2">
             CAPÍTULOS ORGANIZADOS POR OCASIÃO
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {chapters.map((chapter, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow">
+              <div key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow">
                 <div className="w-16 h-16 bg-gradient-to-r from-[#970048] to-[#b8005a] rounded-full flex items-center justify-center mx-auto mb-4">
                   {chapter.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-[#970048]">{chapter.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{chapter.description}</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-4 text-[#970048]">{chapter.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{chapter.description}</p>
               </div>
             ))}
           </div>
@@ -391,41 +394,43 @@ export const GuideLandingPage: React.FC = () => {
       {/* Store Partnership Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#970048] font-serif">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-[#970048] font-serif text-center lg:text-left">
                 TODAS AS JOIAS PODEM SER ENCONTRADAS NA USE ACESSÓRIOS
               </h2>
-              <p className="text-lg mb-8 text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg mb-8 text-gray-700 leading-relaxed text-center lg:text-left">
                 Todas as peças mencionadas no guia estão disponíveis na Use Acessórios,
                 nossa loja com as melhores joias do mercado.
               </p>
 
-              <div className="bg-white p-6 rounded-2xl border-l-4 border-[#970048] mb-8">
-                <div className="flex items-center space-x-4">
+              <div className="bg-white p-6 rounded-2xl border-l-4 border-[#970048] mb-8 text-center lg:text-left">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                   <Gift className="text-[#970048]" size={40} />
                   <div>
-                    <h3 className="text-xl font-semibold text-[#970048] mb-2">OFERTA ESPECIAL</h3>
-                    <p className="text-gray-700">
+                    <h3 className="text-lg sm:text-xl font-semibold text-[#970048] mb-2">OFERTA ESPECIAL</h3>
+                    <p className="text-sm sm:text-base text-gray-700">
                       Sua próxima compra na Use Acessórios sai com <strong>10% de desconto</strong>
                     </p>
                   </div>
                 </div>
               </div>
 
+              <div className="text-center lg:text-left">
               <button
                 onClick={handlePurchase}
-                className="bg-[#970048] text-white px-12 py-5 rounded-lg text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
+                className="bg-[#970048] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
               >
                 ADQUIRIR PROMOÇÃO
               </button>
+              </div>
             </div>
 
             <div className="flex justify-center">
               <img
                 src="/logoUseAcessorios.png"
                 alt="Logo Use Acessórios"
-                className="max-w-sm rounded-2xl shadow-lg"
+                className="max-w-xs sm:max-w-sm rounded-2xl shadow-lg"
               />
             </div>
           </div>
@@ -434,48 +439,50 @@ export const GuideLandingPage: React.FC = () => {
 
       {/* Price Section */}
       <section className="py-16 bg-black text-white">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-yellow-300 font-serif">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-yellow-300 font-serif px-2">
             OFERTA ESPECIAL POR TEMPO LIMITADO
           </h2>
 
           <div className="bg-[#970048] p-6 rounded-2xl mb-8">
-            <div className="text-3xl font-bold text-yellow-300 mb-2">
+            <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2 font-numeric">
               {formatTime(timeLeft)}
             </div>
-            <p>Restam apenas algumas horas para garantir essa oferta!</p>
+            <p className="text-sm sm:text-base">Restam apenas algumas horas para garantir essa oferta!</p>
           </div>
 
           <div className="mb-8">
             <div className="mb-4">
-              <span className="block text-lg mb-2">Valor normal:</span>
-              <span className="text-2xl font-numeric line-through text-gray-400">R$ 197</span>
+              <span className="block text-base sm:text-lg mb-2">Valor normal:</span>
+              <span className="text-xl sm:text-2xl font-numeric line-through text-gray-400">R$ 197</span>
             </div>
             <div>
-              <span className="block text-lg mb-2">Hoje por apenas:</span>
-              <span className="text-5xl font-numeric font-bold text-yellow-300 block">R$ 27</span>
-              <span className="text-gray-300 font-numeric">ou 3x de R$ 9,00</span>
+              <span className="block text-base sm:text-lg mb-2">Hoje por apenas:</span>
+              <span className="text-3xl sm:text-4xl md:text-5xl font-numeric font-bold text-yellow-300 block">R$ 27</span>
+              <span className="text-sm sm:text-base text-gray-300 font-numeric">ou 3x de R$ 9,00</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-center space-x-4 bg-white bg-opacity-10 p-6 rounded-2xl mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 bg-white bg-opacity-10 p-6 rounded-2xl mb-8">
             <Shield className="text-green-400" size={32} />
-            <div>
+            <div className="text-center sm:text-left">
               <h4 className="font-semibold text-green-400 mb-1">Garantia de 7 dias</h4>
-              <p className="text-sm">Se não ficar satisfeita, devolvemos 100% do seu dinheiro</p>
+              <p className="text-xs sm:text-sm">Se não ficar satisfeita, devolvemos 100% do seu dinheiro</p>
             </div>
           </div>
 
           <button
             onClick={handlePurchase}
-            className="bg-[#970048] text-white px-16 py-6 rounded-full text-2xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
+            className="bg-[#970048] text-white px-8 sm:px-12 md:px-16 py-4 sm:py-5 md:py-6 rounded-full text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
           >
             GARANTIR MEU GUIA AGORA
           </button>
 
           <div className="flex items-center justify-center space-x-2 text-gray-300">
             <Shield size={16} />
-            <span className="text-sm">Compra 100% segura e protegida</span>
+            <span className="text-xs sm:text-sm">Compra 100% segura e protegida</span>
+          </div>
           </div>
         </div>
       </section>
@@ -483,7 +490,7 @@ export const GuideLandingPage: React.FC = () => {
       {/* FAQ Section */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12 text-[#970048] font-serif px-2">
             PERGUNTAS FREQUENTES
           </h2>
 
@@ -492,17 +499,17 @@ export const GuideLandingPage: React.FC = () => {
               <div key={index} className="border-b border-gray-200">
                 <button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                  className="w-full flex items-center justify-between py-6 text-left hover:text-[#970048] transition-colors"
+                  className="w-full flex items-center justify-between py-4 sm:py-6 text-left hover:text-[#970048] transition-colors"
                 >
-                  <span className="font-semibold text-lg">{faq.question}</span>
+                  <span className="font-semibold text-base sm:text-lg pr-4">{faq.question}</span>
                   <Plus
                     size={20}
                     className={`transform transition-transform ${activeFaq === index ? 'rotate-45' : ''}`}
                   />
                 </button>
                 {activeFaq === index && (
-                  <div className="pb-6">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  <div className="pb-4 sm:pb-6">
+                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{faq.answer}</p>
                   </div>
                 )}
               </div>

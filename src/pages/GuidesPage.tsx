@@ -7,5 +7,9 @@ interface GuidesPageProps {
 }
 
 export const GuidesPage: React.FC<GuidesPageProps> = ({ onPurchaseGuide }) => {
-  return <GuidesSection onPurchaseGuide={onPurchaseGuide} />;
+  return (
+    <div className="overflow-x-hidden">
+      <GuidesSection onPurchaseGuide={onPurchaseGuide} />
+    </div>
+  );
 };

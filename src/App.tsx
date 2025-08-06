@@ -5,6 +5,8 @@ import { Notification } from './components/Notification';
 import { HomePage } from './pages/HomePage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
+import { AboutPage } from './pages/AboutPage';
+import { ContactPage } from './pages/ContactPage';
 import { GuidesPage } from './pages/GuidesPage';
 import { GuideLandingPage } from './pages/GuideLandingPage';
 import { CheckoutPage } from './pages/CheckoutPage';
@@ -104,6 +106,14 @@ const AppContent: React.FC = () => {
           <Route 
             path="/guide/nunca-mais-erre-na-escolha" 
             element={<GuideLandingPage />} 
+          />
+          <Route 
+            path="/about" 
+            element={<AboutPage />} 
+          />
+          <Route 
+            path="/contact" 
+            element={<ContactPage />} 
           />
           <Route 
             path="/checkout" 
