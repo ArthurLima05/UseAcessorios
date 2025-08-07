@@ -296,10 +296,9 @@ export const ContactPage: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
       </section>
 
     </div>
   );
 };
-  )
-}

@@ -172,7 +172,7 @@ app.post('/api/create-preference',
 
       // VALIDAÇÃO CRÍTICA DE SEGURANÇA - PREÇOS SEMPRE DO BACKEND
       console.log(`[SECURITY] Validando produtos e preços no Firebase...`);
-      
+
       // 1. VALIDAR PRODUTOS NO FIREBASE (PREÇOS REAIS)
       const validatedItems = await productService.validateProducts(items);
       console.log(`[PAYMENT] Produtos validados:`, validatedItems.length);
@@ -180,13 +180,13 @@ app.post('/api/create-preference',
       // 2. VERIFICAÇÃO ANTI-FRAUDE - Comparar valores
       const backendTotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
       console.log(`[SECURITY] Total calculado no backend: R$${backendTotal / 100}`);
-      
+
       // Se houver tentativa de manipulação de preços, bloquear
       if (req.body.clientTotal && Math.abs(req.body.clientTotal - backendTotal) > 1) {
         console.error(`[FRAUD_ATTEMPT] Tentativa de fraude detectada!`);
         console.error(`[FRAUD_ATTEMPT] IP: ${req.ip}, Email: ${customerInfo.email}`);
         console.error(`[FRAUD_ATTEMPT] Total cliente: ${req.body.clientTotal}, Total real: ${backendTotal}`);
-        
+
         return res.status(400).json({
           error: 'Valores inconsistentes detectados. Operação bloqueada por segurança.',
           code: 'SECURITY_VIOLATION'
@@ -225,9 +225,9 @@ app.post('/api/create-preference',
           }
         },
         back_urls: {
-          success: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/success`,
-          failure: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/failure`,
-          pending: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/pending`
+          success: `${process.env.FRONTEND_URL_TEST || 'http://localhost:5173'}/payment/success`,
+          failure: `${process.env.FRONTEND_URL_TEST || 'http://localhost:5173'}/payment/failure`,
+          pending: `${process.env.FRONTEND_URL_TEST || 'http://localhost:5173'}/payment/pending`
         },
         auto_return: 'approved',
         external_reference: reservationId,
@@ -349,24 +349,24 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
         if (Math.abs(payment.transaction_amount - expectedAmount) > 0.01) {
           console.error(`[WEBHOOK] ❌ FRAUDE: Valor incorreto!`);
           console.error(`[WEBHOOK] Esperado: R$${expectedAmount}, Recebido: R$${payment.transaction_amount}`);
-          
+
           await orderService.updateOrderStatus(order.id, 'fraud_detected', {
             fraudReason: 'amount_mismatch',
             expectedAmount,
             receivedAmount: payment.transaction_amount,
             paymentId
           });
-          
+
           return res.status(400).json({ error: 'Amount mismatch detected' });
         }
 
         switch (payment.status) {
           case 'approved':
             console.log(`[WEBHOOK] 💰 Pagamento aprovado: ${paymentId}`);
-            
+
             // DECREMENTAR ESTOQUE APENAS AQUI (APÓS CONFIRMAÇÃO)
             await productService.confirmStockReduction(order.reservationId);
-            
+
             // Atualizar pedido com dados do pagamento
             await orderService.updateOrderStatus(order.id, 'paid', {
               paymentId,
@@ -375,7 +375,7 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
               webhookProcessed: true,
               paidAt: new Date()
             });
-            
+
             console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
             break;
 

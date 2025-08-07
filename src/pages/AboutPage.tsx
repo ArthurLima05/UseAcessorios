@@ -46,19 +46,19 @@ export const AboutPage: React.FC = () => {
               </h2>
               <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
                 <p>
-                  <strong className="text-[#970048]">Maria Fernanda Silva</strong> sempre teve uma paixão especial por acessórios. 
+                  <strong className="text-[#970048]">Maria Fernanda Silva</strong> sempre teve uma paixão especial por acessórios.
                   Desde pequena, ela colecionava brincos, colares e pulseiras, sonhando em um dia criar suas próprias peças.
                 </p>
                 <p>
-                  Formada em Design de Moda pela Universidade Anhembi Morumbi, Maria decidiu transformar sua paixão em negócio. 
+                  Formada em Design de Moda pela Universidade Anhembi Morumbi, Maria decidiu transformar sua paixão em negócio.
                   Em 2020, durante a pandemia, ela fundou a Use Acessórios com o objetivo de democratizar o acesso a joias de qualidade.
                 </p>
                 <p>
-                  "Acredito que toda mulher merece se sentir especial e confiante. Os acessórios certos podem transformar não apenas um look, 
+                  "Acredito que toda mulher merece se sentir especial e confiante. Os acessórios certos podem transformar não apenas um look,
                   mas também como nos sentimos sobre nós mesmas", diz Maria.
                 </p>
                 <p>
-                  Hoje, a Use Acessórios é referência em acessórios femininos, atendendo milhares de clientes em todo o Brasil 
+                  Hoje, a Use Acessórios é referência em acessórios femininos, atendendo milhares de clientes em todo o Brasil
                   com peças cuidadosamente selecionadas e um atendimento personalizado.
                 </p>
               </div>
@@ -148,18 +148,18 @@ export const AboutPage: React.FC = () => {
               </h2>
               <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
                 <p>
-                  A Use Acessórios nasceu da paixão por criar peças únicas que contam histórias. 
-                  Cada acessório é cuidadosamente selecionado pensando na versatilidade, 
+                  A Use Acessórios nasceu da paixão por criar peças únicas que contam histórias.
+                  Cada acessório é cuidadosamente selecionado pensando na versatilidade,
                   elegância e durabilidade.
                 </p>
                 <p>
-                  Acreditamos que os acessórios certos podem transformar qualquer look e elevar 
-                  a autoestima de quem os usa. Nossa missão vai além de vender produtos - 
+                  Acreditamos que os acessórios certos podem transformar qualquer look e elevar
+                  a autoestima de quem os usa. Nossa missão vai além de vender produtos -
                   queremos empoderar mulheres através da moda.
                 </p>
                 <p>
-                  Hoje, somos referência em acessórios femininos, atendendo mulheres que buscam 
-                  qualidade, estilo e sofisticação em cada detalhe. Cada cliente é única, 
+                  Hoje, somos referência em acessórios femininos, atendendo mulheres que buscam
+                  qualidade, estilo e sofisticação em cada detalhe. Cada cliente é única,
                   e nosso atendimento reflete essa individualidade.
                 </p>
               </div>
@@ -238,7 +238,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Missão</h3>
               <p className="text-gray-700 leading-relaxed">
-                Criar acessórios únicos e de qualidade que empoderem mulheres a expressarem 
+                Criar acessórios únicos e de qualidade que empoderem mulheres a expressarem
                 sua personalidade e se sentirem confiantes em qualquer ocasião.
               </p>
             </div>
@@ -246,7 +246,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Visão</h3>
               <p className="text-gray-700 leading-relaxed">
-                Ser a marca de acessórios femininos mais admirada do Brasil, reconhecida 
+                Ser a marca de acessórios femininos mais admirada do Brasil, reconhecida
                 pela qualidade, elegância e inovação em cada peça.
               </p>
             </div>
@@ -254,7 +254,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Compromisso</h3>
               <p className="text-gray-700 leading-relaxed">
-                Oferecer produtos excepcionais, atendimento personalizado e uma experiência 
+                Oferecer produtos excepcionais, atendimento personalizado e uma experiência
                 de compra única que supere as expectativas de nossas clientes.
               </p>
             </div>
@@ -267,7 +267,7 @@ export const AboutPage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
             Faça Parte da Nossa História
-          </h1>
+          </h2>
           <p className="text-xl text-gray-700 mb-10 leading-relaxed">
             Descubra nossa coleção e encontre a peça perfeita que conta a sua história
           </p>
@@ -297,17 +297,17 @@ export const AboutPage: React.FC = () => {
                 Nossa História
               </h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                A Use Acessórios nasceu da paixão por criar peças únicas que contam histórias. 
-                Fundada em 2020, nossa marca se dedica a oferecer acessórios de alta qualidade 
+                A Use Acessórios nasceu da paixão por criar peças únicas que contam histórias.
+                Fundada em 2020, nossa marca se dedica a oferecer acessórios de alta qualidade
                 que complementam a personalidade única de cada mulher.
               </p>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Cada peça é cuidadosamente selecionada e criada pensando na versatilidade, 
-                elegância e durabilidade. Acreditamos que os acessórios certos podem transformar 
+                Cada peça é cuidadosamente selecionada e criada pensando na versatilidade,
+                elegância e durabilidade. Acreditamos que os acessórios certos podem transformar
                 qualquer look e elevar a autoestima de quem os usa.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Hoje, somos referência em acessórios femininos, atendendo mulheres que buscam 
+                Hoje, somos referência em acessórios femininos, atendendo mulheres que buscam
                 qualidade, estilo e sofisticação em cada detalhe.
               </p>
             </div>
@@ -385,7 +385,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Missão</h3>
               <p className="text-gray-700 leading-relaxed">
-                Criar acessórios únicos e de qualidade que empoderem mulheres a expressarem 
+                Criar acessórios únicos e de qualidade que empoderem mulheres a expressarem
                 sua personalidade e se sentirem confiantes em qualquer ocasião.
               </p>
             </div>
@@ -393,7 +393,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Visão</h3>
               <p className="text-gray-700 leading-relaxed">
-                Ser a marca de acessórios femininos mais admirada do Brasil, reconhecida 
+                Ser a marca de acessórios femininos mais admirada do Brasil, reconhecida
                 pela qualidade, elegância e inovação em cada peça.
               </p>
             </div>
@@ -401,7 +401,7 @@ export const AboutPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-2xl font-serif font-bold text-[#970048] mb-4">Compromisso</h3>
               <p className="text-gray-700 leading-relaxed">
-                Oferecer produtos excepcionais, atendimento personalizado e uma experiência 
+                Oferecer produtos excepcionais, atendimento personalizado e uma experiência
                 de compra única que supere as expectativas de nossas clientes.
               </p>
             </div>

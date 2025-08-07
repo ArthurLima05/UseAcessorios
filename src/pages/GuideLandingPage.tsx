@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Play, CheckCircle, Star, Gift, Shield, Plus, ChevronLeft, ChevronRight, DollarSign, HelpCircle, Puzzle, Briefcase, Heart, PartyPopper, Coffee, Plane } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Star, Gift, Shield, Plus, ChevronLeft, ChevronRight, DollarSign, HelpCircle, Puzzle, Briefcase, Heart, PartyPopper, Coffee, Plane } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -123,16 +123,16 @@ export const GuideLandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight px-2">
-            NUNCA MAIS ERRE NA ESCOLHA DAS SUAS JOIAS:
-            <br />
-            <span className="text-yellow-300 block mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl font-normal">
-              DESCUBRA O GUIA QUE TRANSFORMA QUALQUER LOOK COM ESTRATÉGIA E ESTILO
-            </span>
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl opacity-95 max-w-4xl mx-auto px-4">
-            Não é sobre ter mil joias. Não é sobre gastar mais. Não é sobre seguir regras.
-            É sobre fazer as escolhas certas — e ser notada por isso.
-          </p>
+              NUNCA MAIS ERRE NA ESCOLHA DAS SUAS JOIAS:
+              <br />
+              <span className="text-yellow-300 block mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl font-normal">
+                DESCUBRA O GUIA QUE TRANSFORMA QUALQUER LOOK COM ESTRATÉGIA E ESTILO
+              </span>
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl opacity-95 max-w-4xl mx-auto px-4">
+              Não é sobre ter mil joias. Não é sobre gastar mais. Não é sobre seguir regras.
+              É sobre fazer as escolhas certas — e ser notada por isso.
+            </p>
           </div>
         </div>
       </section>
@@ -291,12 +291,12 @@ export const GuideLandingPage: React.FC = () => {
               </div>
 
               <div className="text-center lg:text-left">
-              <button
-                onClick={handlePurchase}
-                className="bg-black text-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-800 transition-colors"
-              >
-                ADQUIRIR MATERIAL
-              </button>
+                <button
+                  onClick={handlePurchase}
+                  className="bg-black text-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-800 transition-colors"
+                >
+                  ADQUIRIR MATERIAL
+                </button>
               </div>
             </div>
 
@@ -417,12 +417,12 @@ export const GuideLandingPage: React.FC = () => {
               </div>
 
               <div className="text-center lg:text-left">
-              <button
-                onClick={handlePurchase}
-                className="bg-[#970048] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
-              >
-                ADQUIRIR PROMOÇÃO
-              </button>
+                <button
+                  onClick={handlePurchase}
+                  className="bg-[#970048] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-lg text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
+                >
+                  ADQUIRIR PROMOÇÃO
+                </button>
               </div>
             </div>
 
@@ -441,48 +441,48 @@ export const GuideLandingPage: React.FC = () => {
       <section className="py-16 bg-black text-white">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-yellow-300 font-serif px-2">
-            OFERTA ESPECIAL POR TEMPO LIMITADO
-          </h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-yellow-300 font-serif px-2">
+              OFERTA ESPECIAL POR TEMPO LIMITADO
+            </h2>
 
-          <div className="bg-[#970048] p-6 rounded-2xl mb-8">
-            <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2 font-numeric">
-              {formatTime(timeLeft)}
+            <div className="bg-[#970048] p-6 rounded-2xl mb-8">
+              <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2 font-numeric">
+                {formatTime(timeLeft)}
+              </div>
+              <p className="text-sm sm:text-base">Restam apenas algumas horas para garantir essa oferta!</p>
             </div>
-            <p className="text-sm sm:text-base">Restam apenas algumas horas para garantir essa oferta!</p>
-          </div>
 
-          <div className="mb-8">
-            <div className="mb-4">
-              <span className="block text-base sm:text-lg mb-2">Valor normal:</span>
-              <span className="text-xl sm:text-2xl font-numeric line-through text-gray-400">R$ 197</span>
+            <div className="mb-8">
+              <div className="mb-4">
+                <span className="block text-base sm:text-lg mb-2">Valor normal:</span>
+                <span className="text-xl sm:text-2xl font-numeric line-through text-gray-400">R$ 197</span>
+              </div>
+              <div>
+                <span className="block text-base sm:text-lg mb-2">Hoje por apenas:</span>
+                <span className="text-3xl sm:text-4xl md:text-5xl font-numeric font-bold text-yellow-300 block">R$ 27</span>
+                <span className="text-sm sm:text-base text-gray-300 font-numeric">ou 3x de R$ 9,00</span>
+              </div>
             </div>
-            <div>
-              <span className="block text-base sm:text-lg mb-2">Hoje por apenas:</span>
-              <span className="text-3xl sm:text-4xl md:text-5xl font-numeric font-bold text-yellow-300 block">R$ 27</span>
-              <span className="text-sm sm:text-base text-gray-300 font-numeric">ou 3x de R$ 9,00</span>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 bg-white bg-opacity-10 p-6 rounded-2xl mb-8">
+              <Shield className="text-green-400" size={32} />
+              <div className="text-center sm:text-left">
+                <h4 className="font-semibold text-green-400 mb-1">Garantia de 7 dias</h4>
+                <p className="text-xs sm:text-sm">Se não ficar satisfeita, devolvemos 100% do seu dinheiro</p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 bg-white bg-opacity-10 p-6 rounded-2xl mb-8">
-            <Shield className="text-green-400" size={32} />
-            <div className="text-center sm:text-left">
-              <h4 className="font-semibold text-green-400 mb-1">Garantia de 7 dias</h4>
-              <p className="text-xs sm:text-sm">Se não ficar satisfeita, devolvemos 100% do seu dinheiro</p>
+            <button
+              onClick={handlePurchase}
+              className="bg-[#970048] text-white px-8 sm:px-12 md:px-16 py-4 sm:py-5 md:py-6 rounded-full text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
+            >
+              GARANTIR MEU GUIA AGORA
+            </button>
+
+            <div className="flex items-center justify-center space-x-2 text-gray-300">
+              <Shield size={16} />
+              <span className="text-xs sm:text-sm">Compra 100% segura e protegida</span>
             </div>
-          </div>
-
-          <button
-            onClick={handlePurchase}
-            className="bg-[#970048] text-white px-8 sm:px-12 md:px-16 py-4 sm:py-5 md:py-6 rounded-full text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors animate-pulse mb-4"
-          >
-            GARANTIR MEU GUIA AGORA
-          </button>
-
-          <div className="flex items-center justify-center space-x-2 text-gray-300">
-            <Shield size={16} />
-            <span className="text-xs sm:text-sm">Compra 100% segura e protegida</span>
-          </div>
           </div>
         </div>
       </section>
