@@ -10,6 +10,7 @@ import { ContactPage } from './pages/ContactPage';
 import { GuidesPage } from './pages/GuidesPage';
 import { GuideLandingPage } from './pages/GuideLandingPage';
 import { CheckoutPage } from './pages/CheckoutPage';
+import { PaymentSuccessPage } from './pages/PaymentSuccessPage';
 import { useCart } from './hooks/useCart';
 import { useNotification } from './hooks/useNotification';
 import { Product, Guide, CartItem } from './types';
@@ -126,6 +127,10 @@ const AppContent: React.FC = () => {
                 showNotification={notification.showNotification}
               />
             } 
+          />
+          <Route 
+            path="/payment/success" 
+            element={<PaymentSuccessPage />} 
           />
         </Routes>
       </Layout>

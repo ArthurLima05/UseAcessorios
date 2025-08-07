@@ -268,13 +268,16 @@ export const orderService = {
   },
 
   // Atualizar status do pedido
-  async updateOrderStatus(orderId, status) {
+  async updateOrderStatus(orderId, status, additionalData = {}) {
     try {
-      await db.collection('orders').doc(orderId).update({
+      const updateData = {
         status,
         updatedAt: new Date(),
-        [`${status}At`]: new Date() // Ex: paidAt, shippedAt, etc.
-      });
+        [`${status}At`]: new Date(), // Ex: paidAt, shippedAt, etc.
+        ...additionalData
+      };
+
+      await db.collection('orders').doc(orderId).update(updateData);
 
       console.log(`[ORDER] Status atualizado: ${orderId} -> ${status}`);
 

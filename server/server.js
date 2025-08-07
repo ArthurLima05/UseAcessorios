@@ -170,22 +170,41 @@ app.post('/api/create-preference',
       console.log(`[MERCADO_PAGO] Iniciando pagamento para: ${customerInfo.email}`);
       console.log(`[PAYMENT] Items recebidos:`, items.map(i => `${i.productId}:${i.quantity}`));
 
+      // VALIDAÇÃO CRÍTICA DE SEGURANÇA - PREÇOS SEMPRE DO BACKEND
+      console.log(`[SECURITY] Validando produtos e preços no Firebase...`);
+      
       // 1. VALIDAR PRODUTOS NO FIREBASE (PREÇOS REAIS)
       const validatedItems = await productService.validateProducts(items);
       console.log(`[PAYMENT] Produtos validados:`, validatedItems.length);
 
-      // 2. RESERVAR ESTOQUE TEMPORARIAMENTE
+      // 2. VERIFICAÇÃO ANTI-FRAUDE - Comparar valores
+      const backendTotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
+      console.log(`[SECURITY] Total calculado no backend: R$${backendTotal / 100}`);
+      
+      // Se houver tentativa de manipulação de preços, bloquear
+      if (req.body.clientTotal && Math.abs(req.body.clientTotal - backendTotal) > 1) {
+        console.error(`[FRAUD_ATTEMPT] Tentativa de fraude detectada!`);
+        console.error(`[FRAUD_ATTEMPT] IP: ${req.ip}, Email: ${customerInfo.email}`);
+        console.error(`[FRAUD_ATTEMPT] Total cliente: ${req.body.clientTotal}, Total real: ${backendTotal}`);
+        
+        return res.status(400).json({
+          error: 'Valores inconsistentes detectados. Operação bloqueada por segurança.',
+          code: 'SECURITY_VIOLATION'
+        });
+      }
+
+      // 3. RESERVAR ESTOQUE TEMPORARIAMENTE
       const reservationId = await productService.reserveStock(validatedItems);
       console.log(`[PAYMENT] Estoque reservado: ${reservationId}`);
 
-      // 3. CALCULAR VALORES NO BACKEND (IMPOSSÍVEL MANIPULAR)
+      // 4. CALCULAR VALORES NO BACKEND (IMPOSSÍVEL MANIPULAR)
       const subtotal = validatedItems.reduce((sum, item) => sum + item.total, 0);
       const shipping = 0; // Frete será calculado externamente
       const total = subtotal + shipping;
 
       console.log(`[MERCADO_PAGO] Valores calculados - Subtotal: R$${subtotal / 100}, Total: R$${total / 100}`);
 
-      // 4. CRIAR PREFERÊNCIA NO MERCADO PAGO
+      // 5. CRIAR PREFERÊNCIA NO MERCADO PAGO
       const preferenceData = {
         items: validatedItems.map(item => ({
           title: item.productName,
@@ -206,9 +225,9 @@ app.post('/api/create-preference',
           }
         },
         back_urls: {
-          success: `${process.env.BACKEND_URL}/payment/success`,
-          failure: `${process.env.BACKEND_URL}/payment/failure`,
-          pending: `${process.env.BACKEND_URL}/payment/pending`
+          success: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/success`,
+          failure: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/failure`,
+          pending: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/pending`
         },
         auto_return: 'approved',
         external_reference: reservationId,
@@ -217,7 +236,7 @@ app.post('/api/create-preference',
       console.log('[DEBUG] Dados da preferência:', JSON.stringify(preferenceData, null, 2));
       const mpPreference = await preference.create({ body: preferenceData });
 
-      // 5. CRIAR PEDIDO PENDENTE NO FIREBASE
+      // 6. CRIAR PEDIDO PENDENTE NO FIREBASE
       const orderData = {
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
@@ -232,6 +251,8 @@ app.post('/api/create-preference',
         status: 'pending',
         preferenceId: mpPreference.id,
         reservationId: reservationId,
+        securityValidated: true,
+        ipAddress: req.ip,
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -262,7 +283,7 @@ app.post('/api/create-preference',
 
       // Log de segurança para tentativas suspeitas
       if (error.message.includes('Produto') || error.message.includes('estoque')) {
-        console.log(`[SECURITY] Tentativa suspeita de ${req.ip}: ${error.message}`);
+        console.error(`[SECURITY] Tentativa suspeita de ${req.ip}: ${error.message}`);
       }
 
       console.log('[DEBUG] Respondendo com erro:', error.message);
@@ -275,14 +296,27 @@ app.post('/api/create-preference',
 );
 
 // Webhook do Mercado Pago - ULTRA SEGURO
-app.post('/api/webhook', async (req, res) => {
+app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
-    const { type, data } = req.body;
+    let body;
+    try {
+      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    } catch (parseError) {
+      console.error('[WEBHOOK] Erro ao fazer parse do body:', parseError);
+      return res.status(400).json({ error: 'Invalid JSON' });
+    }
+
+    const { type, data } = body;
 
     console.log(`[WEBHOOK] Recebido evento: ${type}`);
+    console.log(`[WEBHOOK] Data:`, JSON.stringify(data, null, 2));
 
     if (type === 'payment') {
       const paymentId = data.id;
+
+      // Verificação de idempotência
+      const processedKey = `webhook_${paymentId}_${Date.now()}`;
+      console.log(`[WEBHOOK] Processando pagamento: ${paymentId}`);
 
       // Buscar informações do pagamento no Mercado Pago
       const paymentResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -291,25 +325,68 @@ app.post('/api/webhook', async (req, res) => {
         }
       });
 
+      if (!paymentResponse.ok) {
+        console.error(`[WEBHOOK] Erro ao buscar pagamento: ${paymentResponse.status}`);
+        return res.status(400).json({ error: 'Payment not found' });
+      }
+
       const payment = await paymentResponse.json();
       console.log(`[WEBHOOK] Status do pagamento: ${payment.status}`);
+      console.log(`[WEBHOOK] Valor: ${payment.transaction_amount}`);
 
       // Buscar pedido pela referência externa (reservationId)
       const order = await orderService.getOrderByReservationId(payment.external_reference);
 
       if (order) {
+        // Verificar se já foi processado (idempotência)
+        if (order.webhookProcessed && order.status === 'paid') {
+          console.log(`[WEBHOOK] ⚠️ Pagamento já processado: ${paymentId}`);
+          return res.json({ received: true, status: 'already_processed' });
+        }
+
+        // VALIDAÇÃO CRÍTICA: Verificar valor do pagamento
+        const expectedAmount = order.total / 100; // Converter centavos para reais
+        if (Math.abs(payment.transaction_amount - expectedAmount) > 0.01) {
+          console.error(`[WEBHOOK] ❌ FRAUDE: Valor incorreto!`);
+          console.error(`[WEBHOOK] Esperado: R$${expectedAmount}, Recebido: R$${payment.transaction_amount}`);
+          
+          await orderService.updateOrderStatus(order.id, 'fraud_detected', {
+            fraudReason: 'amount_mismatch',
+            expectedAmount,
+            receivedAmount: payment.transaction_amount,
+            paymentId
+          });
+          
+          return res.status(400).json({ error: 'Amount mismatch detected' });
+        }
+
         switch (payment.status) {
           case 'approved':
             console.log(`[WEBHOOK] 💰 Pagamento aprovado: ${paymentId}`);
-            await orderService.updateOrderStatus(order.id, 'paid');
+            
+            // DECREMENTAR ESTOQUE APENAS AQUI (APÓS CONFIRMAÇÃO)
             await productService.confirmStockReduction(order.reservationId);
+            
+            // Atualizar pedido com dados do pagamento
+            await orderService.updateOrderStatus(order.id, 'paid', {
+              paymentId,
+              paymentMethod: payment.payment_method_id,
+              paymentAmount: payment.transaction_amount,
+              webhookProcessed: true,
+              paidAt: new Date()
+            });
+            
             console.log(`[WEBHOOK] ✅ Pedido processado: ${order.id}`);
             break;
 
           case 'rejected':
           case 'cancelled':
             console.log(`[WEBHOOK] ❌ Pagamento rejeitado/cancelado: ${paymentId}`);
-            await orderService.updateOrderStatus(order.id, 'cancelled');
+            await orderService.updateOrderStatus(order.id, 'cancelled', {
+              paymentId,
+              cancelReason: payment.status_detail,
+              webhookProcessed: true
+            });
             await productService.releaseReservedStock(order.reservationId);
             console.log(`[WEBHOOK] 🔄 Estoque liberado para pedido: ${order.id}`);
             break;
@@ -317,7 +394,10 @@ app.post('/api/webhook', async (req, res) => {
           case 'pending':
           case 'in_process':
             console.log(`[WEBHOOK] ⏳ Pagamento pendente: ${paymentId}`);
-            await orderService.updateOrderStatus(order.id, 'pending');
+            await orderService.updateOrderStatus(order.id, 'pending', {
+              paymentId,
+              webhookProcessed: true
+            });
             break;
         }
       } else {
