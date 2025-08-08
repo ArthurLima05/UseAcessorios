@@ -138,14 +138,14 @@ export const GuideLandingPage: React.FC = () => {
       </section>
 
       {/* Video Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center mb-8 px-2">
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center mb-6 px-2">
             <video
               autoPlay
               muted
               controls
-              className="w-full max-w-2xl h-auto rounded-2xl shadow-2xl"
+              className="w-full max-w-xl h-auto rounded-xl shadow-lg aspect-video"
             >
               <source src="/vsl_ebook.mp4" type="video/mp4" />
               Seu navegador não suporta vídeos HTML5.
@@ -155,7 +155,7 @@ export const GuideLandingPage: React.FC = () => {
           <div className="text-center">
             <button
               onClick={handlePurchase}
-              className="bg-[#970048] text-white px-8 sm:px-12 md:px-14 py-4 sm:py-5 rounded-full text-xl sm:text-2xl md:text-3xl font-semibold hover:bg-[#7a0039] transition-colors"
+              className="bg-[#970048] text-white px-6 sm:px-10 md:px-12 py-3 sm:py-4 rounded-full text-lg sm:text-xl md:text-2xl font-semibold hover:bg-[#7a0039] transition-colors"
             >
               JÁ ESTOU DECIDIDA
             </button>

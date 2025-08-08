@@ -38,7 +38,7 @@ export const ContactPage: React.FC = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#970048] via-[#b8005a] to-[#970048] text-white py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#970048] via-[#b8005a] to-[#970048] text-white py-12 lg:py-16 overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
@@ -46,10 +46,10 @@ export const ContactPage: React.FC = () => {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-serif font-bold mb-8 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold mb-4 sm:mb-6 leading-tight">
               Fale Conosco
             </h1>
-            <p className="text-xl lg:text-2xl opacity-95 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg lg:text-xl opacity-95 max-w-3xl mx-auto leading-relaxed">
               Estamos aqui para ajudar você a encontrar o acessório perfeito
             </p>
           </div>

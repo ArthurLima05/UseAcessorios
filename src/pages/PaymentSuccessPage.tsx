@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, Package, Truck, Mail, Phone, MapPin, ArrowLeft } from 'lucide-react';
+import { db } from '../config/firebase';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 interface OrderData {
   id: string;
@@ -27,47 +29,61 @@ export const PaymentSuccessPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const paymentId = searchParams.get('payment_id');
   const status = searchParams.get('status');
-  const merchantOrderId = searchParams.get('merchant_order_id');
+  const externalReference = searchParams.get('external_reference');
 
   useEffect(() => {
-    // Simular busca dos dados do pedido
-    // Em produção, você faria uma chamada para a API
-    const mockOrderData: OrderData = {
-      id: merchantOrderId || 'ORDER-123',
-      customerName: 'Maria Silva',
-      customerEmail: 'maria@email.com',
-      customerPhone: '(11) 99999-9999',
-      customerAddress: 'Rua das Flores, 123',
-      customerCity: 'São Paulo, SP',
-      items: [
-        {
-          productName: 'Brincos de Pérola Clássicos',
-          quantity: 1,
-          price: 16500,
-          total: 16500
-        },
-        {
-          productName: 'Colar Gargantilha Moderna',
-          quantity: 2,
-          price: 9800,
-          total: 19600
+    const fetchOrderData = async () => {
+      if (!externalReference) {
+        setError('Referência do pedido não encontrada');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Buscar pedido pela referência externa (reservationId)
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, where('reservationId', '==', externalReference));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          setError('Pedido não encontrado');
+          setLoading(false);
+          return;
         }
-      ],
-      subtotal: 36100,
-      shipping: 0,
-      total: 36100,
-      status: 'paid',
-      createdAt: new Date()
+
+        const orderDoc = querySnapshot.docs[0];
+        const orderFirebaseData = orderDoc.data();
+
+        const orderData: OrderData = {
+          id: orderDoc.id,
+          customerName: orderFirebaseData.customerName,
+          customerEmail: orderFirebaseData.customerEmail,
+          customerPhone: orderFirebaseData.customerPhone,
+          customerAddress: orderFirebaseData.customerAddress,
+          customerCity: orderFirebaseData.customerCity,
+          items: orderFirebaseData.items,
+          subtotal: orderFirebaseData.subtotal,
+          shipping: orderFirebaseData.shipping || 0,
+          total: orderFirebaseData.total,
+          status: orderFirebaseData.status,
+          createdAt: orderFirebaseData.createdAt
+        };
+
+        setOrderData(orderData);
+      } catch (err) {
+        console.error('Erro ao buscar dados do pedido:', err);
+        setError('Erro ao carregar informações do pedido');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setTimeout(() => {
-      setOrderData(mockOrderData);
-      setLoading(false);
-    }, 1000);
-  }, [merchantOrderId]);
+    fetchOrderData();
+  }, [externalReference]);
 
   if (loading) {
     return (
@@ -80,7 +96,7 @@ export const PaymentSuccessPage: React.FC = () => {
     );
   }
 
-  if (status !== 'approved' || !orderData) {
+  if (error || status !== 'approved' || !orderData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="max-w-md mx-auto text-center p-8">
@@ -88,7 +104,7 @@ export const PaymentSuccessPage: React.FC = () => {
             <CheckCircle className="text-red-600" size={32} />
           </div>
           <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4">
-            Pagamento não confirmado
+            {error || 'Pagamento não confirmado'}
           </h2>
           <p className="text-gray-600 mb-6">
             Não foi possível confirmar seu pagamento. Entre em contato conosco se precisar de ajuda.
