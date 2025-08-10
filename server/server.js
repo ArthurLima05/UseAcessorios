@@ -64,7 +64,6 @@ const paymentLimiter = rateLimit({
 app.use(generalLimiter);
 
 // Middleware para parsing JSON (exceto para webhook)
-app.use('/api/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({
   limit: '1mb',
   strict: true
@@ -296,23 +295,46 @@ app.post('/api/create-preference',
 );
 
 // Webhook do Mercado Pago - ULTRA SEGURO
-app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+app.post('/api/webhook', express.json(), async (req, res) => {
   try {
-    let body;
-    try {
-      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    } catch (parseError) {
-      console.error('[WEBHOOK] Erro ao fazer parse do body:', parseError);
-      return res.status(400).json({ error: 'Invalid JSON' });
+    console.log('[WEBHOOK] Body completo recebido:', JSON.stringify(req.body, null, 2));
+    console.log('[WEBHOOK] Headers:', JSON.stringify(req.headers, null, 2));
+
+    // Mercado Pago pode enviar diferentes formatos
+    let eventType, paymentId;
+    
+    // Formato 1: { type: "payment", data: { id: "123" } }
+    if (req.body.type && req.body.data) {
+      eventType = req.body.type;
+      paymentId = req.body.data.id;
+    }
+    // Formato 2: { action: "payment.created", data: { id: "123" } }
+    else if (req.body.action && req.body.data) {
+      eventType = req.body.action.includes('payment') ? 'payment' : req.body.action;
+      paymentId = req.body.data.id;
+    }
+    // Formato 3: Direto { id: "123", topic: "payment" }
+    else if (req.body.id && req.body.topic) {
+      eventType = req.body.topic;
+      paymentId = req.body.id;
+    }
+    // Formato 4: Query parameters (backup)
+    else if (req.query.id && req.query.topic) {
+      eventType = req.query.topic;
+      paymentId = req.query.id;
+    }
+    else {
+      console.error('[WEBHOOK] Formato não reconhecido:', req.body);
+      return res.status(400).json({ error: 'Formato de webhook não reconhecido' });
     }
 
-    const { type, data } = body;
+    console.log(`[WEBHOOK] Evento processado: ${eventType}, Payment ID: ${paymentId}`);
 
-    console.log(`[WEBHOOK] Recebido evento: ${type}`);
-    console.log(`[WEBHOOK] Data:`, JSON.stringify(data, null, 2));
-
-    if (type === 'payment') {
-      const paymentId = data.id;
+    if (eventType === 'payment' || eventType.includes('payment')) {
+      if (!paymentId) {
+        console.error('[WEBHOOK] Payment ID não encontrado');
+        return res.status(400).json({ error: 'Payment ID não encontrado' });
+      }
 
       // Verificação de idempotência
       const processedKey = `webhook_${paymentId}_${Date.now()}`;
@@ -333,6 +355,7 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
       const payment = await paymentResponse.json();
       console.log(`[WEBHOOK] Status do pagamento: ${payment.status}`);
       console.log(`[WEBHOOK] Valor: ${payment.transaction_amount}`);
+      console.log(`[WEBHOOK] External reference: ${payment.external_reference}`);
 
       // Buscar pedido pela referência externa (reservationId)
       const order = await orderService.getOrderByReservationId(payment.external_reference);
@@ -403,6 +426,8 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
       } else {
         console.error(`[WEBHOOK] ❌ Pedido não encontrado para referência: ${payment.external_reference}`);
       }
+    } else {
+      console.log(`[WEBHOOK] Evento ignorado: ${eventType}`);
     }
 
     res.json({ received: true });

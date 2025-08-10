@@ -37,20 +37,55 @@ export const PaymentSuccessPage: React.FC = () => {
 
   useEffect(() => {
     const fetchOrderData = async () => {
-      if (!externalReference) {
+      // Tentar diferentes fontes para o external_reference
+      const reference = externalReference || 
+                       searchParams.get('merchant_order_id') ||
+                       searchParams.get('preference_id');
+      
+      if (!reference) {
+        console.log('Parâmetros disponíveis:', Object.fromEntries(searchParams.entries()));
         setError('Referência do pedido não encontrada');
         setLoading(false);
         return;
       }
 
       try {
+        console.log('Buscando pedido com referência:', reference);
         // Buscar pedido pela referência externa (reservationId)
         const ordersRef = collection(db, 'orders');
-        const q = query(ordersRef, where('reservationId', '==', externalReference));
+        const q = query(ordersRef, where('reservationId', '==', reference));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-          setError('Pedido não encontrado');
+          // Tentar buscar por preferenceId como fallback
+          const q2 = query(ordersRef, where('preferenceId', '==', reference));
+          const querySnapshot2 = await getDocs(q2);
+          
+          if (querySnapshot2.empty) {
+            setError('Pedido não encontrado');
+            setLoading(false);
+            return;
+          }
+          
+          const orderDoc = querySnapshot2.docs[0];
+          const orderFirebaseData = orderDoc.data();
+          
+          const orderData: OrderData = {
+            id: orderDoc.id,
+            customerName: orderFirebaseData.customerName,
+            customerEmail: orderFirebaseData.customerEmail,
+            customerPhone: orderFirebaseData.customerPhone,
+            customerAddress: orderFirebaseData.customerAddress,
+            customerCity: orderFirebaseData.customerCity,
+            items: orderFirebaseData.items,
+            subtotal: orderFirebaseData.subtotal,
+            shipping: orderFirebaseData.shipping || 0,
+            total: orderFirebaseData.total,
+            status: orderFirebaseData.status,
+            createdAt: orderFirebaseData.createdAt
+          };
+
+          setOrderData(orderData);
           setLoading(false);
           return;
         }
@@ -83,7 +118,7 @@ export const PaymentSuccessPage: React.FC = () => {
     };
 
     fetchOrderData();
-  }, [externalReference]);
+  }, [externalReference, searchParams]);
 
   if (loading) {
     return (
