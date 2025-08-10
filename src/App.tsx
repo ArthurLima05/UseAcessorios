@@ -11,7 +11,6 @@ import { GuidesPage } from './pages/GuidesPage';
 import { GuideLandingPage } from './pages/GuideLandingPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { PaymentSuccessPage } from './pages/PaymentSuccessPage';
-import { PaymentFailurePage } from './pages/PaymentFailurePage';
 import { useCart } from './hooks/useCart';
 import { useNotification } from './hooks/useNotification';
 import { Product, Guide, CartItem } from './types';
@@ -132,10 +131,6 @@ const AppContent: React.FC = () => {
           <Route 
             path="/payment/success" 
             element={<PaymentSuccessPage />} 
-          />
-          <Route 
-            path="/payment/failure" 
-            element={<PaymentFailurePage />} 
           />
         </Routes>
       </Layout>

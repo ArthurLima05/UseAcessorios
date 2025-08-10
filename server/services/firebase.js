@@ -1,5 +1,4 @@
 import { db } from '../config/firebase-admin.js';
-import admin from '../config/firebase-admin.js';
 
 // Serviços para produtos
 export const productService = {
@@ -225,7 +224,7 @@ export const productService = {
   // Limpeza automática de reservas expiradas (executar periodicamente)
   async cleanupExpiredReservations() {
     try {
-      const now = admin.firestore.Timestamp.now();
+      const now = new Date();
       const expiredQuery = db.collection('stock_reservations')
         .where('status', '==', 'active')
         .where('expiresAt', '<=', now);
@@ -233,79 +232,17 @@ export const productService = {
       const expiredSnap = await expiredQuery.get();
 
       if (expiredSnap.empty) {
-        console.log('[CLEANUP] Nenhuma reserva expirada encontrada');
         return;
       }
 
       console.log(`[CLEANUP] Limpando ${expiredSnap.size} reservas expiradas`);
 
-      const batch = db.batch();
-      const reservationsToRelease = [];
-
-      // Primeiro, marcar todas as reservas como "released"
       for (const doc of expiredSnap.docs) {
-        const reservationRef = db.collection('stock_reservations').doc(doc.id);
-        batch.update(reservationRef, {
-          status: 'released',
-          releasedAt: admin.firestore.FieldValue.serverTimestamp()
-        });
-        reservationsToRelease.push({
-          id: doc.id,
-          data: doc.data()
-        });
-      }
-
-      // Commit das mudanças de status
-      await batch.commit();
-
-      // Agora liberar o estoque para cada reserva
-      for (const reservation of reservationsToRelease) {
-        try {
-          await this.restoreStockFromReservation(reservation.data);
-          console.log(`[CLEANUP] Estoque restaurado para reserva: ${reservation.id}`);
-        } catch (error) {
-          console.error(`[CLEANUP] Erro ao restaurar estoque da reserva ${reservation.id}:`, error);
-        }
+        await this.releaseReservedStock(doc.id);
       }
 
     } catch (error) {
       console.error('Erro na limpeza de reservas:', error);
-    }
-  },
-
-  // Função auxiliar para restaurar estoque de uma reserva específica
-  async restoreStockFromReservation(reservationData) {
-    try {
-      const batch = db.batch();
-
-      for (const item of reservationData.items) {
-        const productRef = db.collection('products').doc(item.productId);
-        const productSnap = await productRef.get();
-
-        if (productSnap.exists) {
-          const currentQuantity = productSnap.data().quantity || 0;
-          const newQuantity = currentQuantity + item.quantity;
-
-          const updateData = {
-            quantity: newQuantity,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-          };
-
-          // Se quantidade > 0, reativar produto
-          if (newQuantity > 0) {
-            updateData.inStock = true;
-            updateData.active = true;
-          }
-
-          batch.update(productRef, updateData);
-          console.log(`[CLEANUP] Produto ${item.productId}: ${currentQuantity} + ${item.quantity} = ${newQuantity}`);
-        }
-      }
-
-      await batch.commit();
-    } catch (error) {
-      console.error('Erro ao restaurar estoque:', error);
-      throw error;
     }
   }
 };
